@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSS Selectors Practice</title>
+
+    <style>
+        /* Element selector */
+        h1 {
+            text-align: center;
+        }
+
+        /* Class selector */
+        .card {
+            border: 2px solid black;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        /* ID selector */
+        #special {
+            font-weight: bold;
+        }
+
+        /* Group selector */
+        h2, p {
+            font-family: Arial, sans-serif;
+        }
+
+        /* Descendant selector */
+        .skills li {
+            margin: 8px 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>CSS Selectors Practice</h1>
+        <p>Learning how CSS selectors target HTML elements.</p>
+    </header>
+
+    <hr>
+
+    <main>
+
+        <section class="card">
+            <h2>Element Selector</h2>
+            <p>This paragraph is styled using an element selector.</p>
+        </section>
+
+        <section class="card">
+            <h2>Class Selector</h2>
+            <p>The <strong>.card</strong> class is used to style multiple sections.</p>
+        </section>
+
+        <section class="card">
+            <h2>ID Selector</h2>
+            <p id="special">This paragraph uses a unique ID selector.</p>
+        </section>
+
+        <section class="card">
+            <h2>Skills</h2>
+            <ul class="skills">
+                <li>HTML</li>
+                <li>CSS</li>
+                <li>Git & GitHub</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <hr>
+
+    <footer>
+        <p>Created by Ganesh Awale | Frontend Development Journey</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSS Positioning Practice</title>
+    <style>
+        .parent {
+            position: relative;
+            height: 250px;
+            border: 2px solid black;
+            padding: 20px;
+        }
+
+        .static-box {
+            position: static;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        .absolute-box {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+
+        .fixed-box {
+            position: fixed;
+            right: 15px;
+            top: 15px;
+            padding: 10px;
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+    <h1>CSS Positioning</h1>
+
+    <div class="parent">
+        <div class="static-box">Static Position</div>
+        <div class="absolute-box">Absolute Position</div>
+    </div>
+
+    <div class="fixed-box">Fixed Position</div>
+
+    <h2>Position Values</h2>
+    <ol>
+        <li>static</li>
+        <li>relative</li>
+        <li>absolute</li>
+        <li>fixed</li>
+        <li>sticky</li>
+    </ol>
+</body>
+</html>

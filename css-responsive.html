@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Responsive CSS Practice</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .card {
+            flex: 1;
+            border: 2px solid black;
+            padding: 25px;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Responsive Web Design</h1>
+    <p>Resize the browser window to see the layout change.</p>
+
+    <div class="container">
+        <div class="card">
+            <h2>Desktop</h2>
+            <p>Cards appear side by side on larger screens.</p>
+        </div>
+
+        <div class="card">
+            <h2>Mobile</h2>
+            <p>Cards stack vertically on smaller screens.</p>
+        </div>
+    </div>
+
+    <h2>Media Query</h2>
+    <p>The <strong>@media</strong> rule allows CSS to change based on screen size.</p>
+
+</body>
+</html>

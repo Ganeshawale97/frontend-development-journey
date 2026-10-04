@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Responsive Profile Card</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .profile-card {
+            max-width: 500px;
+            margin: auto;
+            padding: 30px;
+            border: 2px solid black;
+            text-align: center;
+        }
+
+        .skills {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .skill {
+            border: 1px solid black;
+            padding: 8px 12px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 15px;
+            }
+
+            .profile-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <h1>Ganesh Awale</h1>
+        <p>Frontend Development Learner</p>
+
+        <h2>Skills</h2>
+        <div class="skills">
+            <span class="skill">HTML</span>
+            <span class="skill">CSS</span>
+            <span class="skill">Git</span>
+            <span class="skill">Python</span>
+        </div>
+
+        <h2>Goal</h2>
+        <p>Build modern and responsive websites.</p>
+    </div>
+
+</body>
+</html>

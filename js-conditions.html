@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Conditions</title>
+</head>
+<body>
+    <h1>JavaScript Conditions</h1>
+    <p id="result"></p>
+
+    <script>
+        let marks = 82;
+        let result;
+
+        if (marks >= 90) {
+            result = "Grade A+";
+        } else if (marks >= 75) {
+            result = "Grade A";
+        } else if (marks >= 60) {
+            result = "Grade B";
+        } else {
+            result = "Needs Improvement";
+        }
+
+        document.getElementById("result").textContent = result;
+    </script>
+</body>
+</html>

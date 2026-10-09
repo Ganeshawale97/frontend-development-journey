@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>JavaScript Arrays</title></head>
+<body>
+    <h1>JavaScript Arrays</h1>
+    <p>My learning topics:</p>
+    <ul id="topics"></ul>
+    <script>
+        const topics = ["HTML", "CSS", "JavaScript"];
+        topics.push("Git and GitHub");
+
+        const list = document.getElementById("topics");
+        topics.forEach(function (topic) {
+            const item = document.createElement("li");
+            item.textContent = topic;
+            list.appendChild(item);
+        });
+    </script>
+</body>
+</html>

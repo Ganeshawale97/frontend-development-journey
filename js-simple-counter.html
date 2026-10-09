@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Counter</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 30px; }
+        #count { font-size: 40px; margin: 20px; }
+        button { padding: 10px 16px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Simple Counter</h1>
+    <p id="count">0</p>
+    <button id="decrease">Decrease</button>
+    <button id="reset">Reset</button>
+    <button id="increase">Increase</button>
+    <script>
+        let count = 0;
+        const output = document.getElementById("count");
+
+        function updateCount() {
+            output.textContent = count;
+        }
+
+        document.getElementById("decrease").addEventListener("click", function () {
+            count--;
+            updateCount();
+        });
+
+        document.getElementById("reset").addEventListener("click", function () {
+            count = 0;
+            updateCount();
+        });
+
+        document.getElementById("increase").addEventListener("click", function () {
+            count++;
+            updateCount();
+        });
+    </script>
+</body>
+</html>

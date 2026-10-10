@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Digital Clock</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px; }
+        #clock { font-size: 2.5rem; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Digital Clock</h1>
+    <p id="clock" aria-live="off"></p>
+    <p>A live clock using JavaScript's Date object.</p>
+    <script>
+        function updateClock() {
+            const now = new Date();
+            document.getElementById("clock").textContent =
+                now.toLocaleTimeString();
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    </script>
+</body>
+</html>

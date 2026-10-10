@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>JavaScript Array Methods</title></head>
+<body>
+    <h1>Array Methods</h1>
+    <p id="output"></p>
+    <script>
+        const topics = ["HTML", "CSS", "JavaScript"];
+        topics.push("React");
+        const firstTopic = topics[0];
+        const hasCSS = topics.includes("CSS");
+        const list = topics.map(topic => "<li>" + topic + "</li>").join("");
+        document.getElementById("output").innerHTML =
+            "First topic: " + firstTopic + "<br>" +
+            "Contains CSS: " + hasCSS + "<br>" +
+            "All topics:<ul>" + list + "</ul>";
+    </script>
+</body>
+</html>

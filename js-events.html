@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>JavaScript Events</title></head>
+<body>
+    <h1>JavaScript Events</h1>
+    <button id="helloButton">Say Hello</button>
+    <input id="nameInput" placeholder="Enter your name">
+    <p id="message">Try the button or type your name.</p>
+    <script>
+        const message = document.getElementById("message");
+        document.getElementById("helloButton").addEventListener("click", function () {
+            const name = document.getElementById("nameInput").value.trim();
+            message.textContent = name ? "Hello, " + name + "!" : "Hello there!";
+        });
+        document.getElementById("nameInput").addEventListener("input", function (event) {
+            if (event.target.value.trim()) {
+                message.textContent = "You're typing: " + event.target.value;
+            }
+        });
+    </script>
+</body>
+</html>

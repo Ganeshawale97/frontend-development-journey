@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>JavaScript String Methods</title></head>
+<body>
+    <h1>String Methods</h1>
+    <p id="output"></p>
+    <script>
+        const text = "Frontend Development";
+        const output = [
+            "Original: " + text,
+            "Length: " + text.length,
+            "Uppercase: " + text.toUpperCase(),
+            "Lowercase: " + text.toLowerCase(),
+            "Includes 'Development': " + text.includes("Development"),
+            "Replace: " + text.replace("Frontend", "Web")
+        ];
+        document.getElementById("output").innerHTML = output.join("<br>");
+    </script>
+</body>
+</html>

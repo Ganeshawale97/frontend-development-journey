@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Color Changer</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 40px 16px; transition: background-color 0.2s; }
+        button { padding: 12px 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Background Color Changer</h1>
+    <p>Click the button to choose a new background color.</p>
+    <button id="changeColor">Change Background</button>
+    <p id="colorName" aria-live="polite">Current color: white</p>
+    <script>
+        const colors = [
+            { name: "lightblue", value: "#add8e6" },
+            { name: "lightgreen", value: "#90ee90" },
+            { name: "lightyellow", value: "#ffffe0" },
+            { name: "lavender", value: "#e6e6fa" },
+            { name: "misty rose", value: "#ffe4e1" }
+        ];
+        let currentIndex = -1;
+        document.getElementById("changeColor").addEventListener("click", function () {
+            currentIndex = (currentIndex + 1) % colors.length;
+            document.body.style.backgroundColor = colors[currentIndex].value;
+            document.getElementById("colorName").textContent = "Current color: " + colors[currentIndex].name;
+        });
+    </script>
+</body>
+</html>

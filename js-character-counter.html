@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Counter</title>
+</head>
+<body>
+    <h1>Character Counter</h1>
+    <label for="textInput">Write something:</label><br>
+    <textarea id="textInput" rows="6" cols="40" maxlength="200" placeholder="Start typing..."></textarea>
+    <p id="count" aria-live="polite">0 / 200 characters</p>
+    <script>
+        const textInput = document.getElementById("textInput");
+        const count = document.getElementById("count");
+        textInput.addEventListener("input", function () {
+            count.textContent = textInput.value.length + " / 200 characters";
+        });
+    </script>
+</body>
+</html>

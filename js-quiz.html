@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JavaScript Quiz</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:650px;margin:40px auto;padding:0 16px}
+.question{padding:16px;border:1px solid #aaa;margin:14px 0}
+button{padding:10px 16px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>JavaScript Basics Quiz</h1>
+<form id="quiz">
+<div class="question">
+<p>1. Which keyword declares a variable that can be reassigned?</p>
+<label><input type="radio" name="q1" value="a"> const</label><br>
+<label><input type="radio" name="q1" value="b"> let</label><br>
+<label><input type="radio" name="q1" value="c"> fixed</label>
+</div>
+<div class="question">
+<p>2. Which method adds an item to the end of an array?</p>
+<label><input type="radio" name="q2" value="a"> push()</label><br>
+<label><input type="radio" name="q2" value="b"> pop()</label><br>
+<label><input type="radio" name="q2" value="c"> shift()</label>
+</div>
+<div class="question">
+<p>3. Which method selects an element by its ID?</p>
+<label><input type="radio" name="q3" value="a"> getElementsByClass()</label><br>
+<label><input type="radio" name="q3" value="b"> queryAll()</label><br>
+<label><input type="radio" name="q3" value="c"> getElementById()</label>
+</div>
+<button type="submit">Check Answers</button>
+</form>
+<p id="result" aria-live="polite"></p>
+<script>
+document.getElementById("quiz").addEventListener("submit",function(event){
+event.preventDefault();
+const answers={q1:"b",q2:"a",q3:"c"};
+let score=0;
+for(const question in answers){
+const selected=document.querySelector('input[name="'+question+'"]:checked');
+if(selected&&selected.value===answers[question])score++;
+}
+document.getElementById("result").textContent="You scored "+score+" out of "+Object.keys(answers).length+".";
+});
+</script>
+</body>
+</html>

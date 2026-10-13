@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stopwatch</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;padding:40px}
+#time{font-size:3rem;margin:24px}
+button{padding:10px 16px;margin:4px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Stopwatch</h1>
+<p id="time" aria-live="off">00:00.0</p>
+<button id="start">Start</button>
+<button id="pause">Pause</button>
+<button id="reset">Reset</button>
+<script>
+let elapsed=0,startTime=0,timer=null;
+const output=document.getElementById("time");
+function render(){
+const tenths=Math.floor(elapsed/100);
+const minutes=Math.floor(tenths/600);
+const seconds=Math.floor((tenths%600)/10);
+const tenth=tenths%10;
+output.textContent=String(minutes).padStart(2,"0")+":"+String(seconds).padStart(2,"0")+"."+tenth;
+}
+document.getElementById("start").addEventListener("click",function(){
+if(timer!==null)return;
+startTime=Date.now()-elapsed;
+timer=setInterval(function(){elapsed=Date.now()-startTime;render();},100);
+});
+document.getElementById("pause").addEventListener("click",function(){
+if(timer!==null){clearInterval(timer);timer=null;elapsed=Date.now()-startTime;render();}
+});
+document.getElementById("reset").addEventListener("click",function(){
+if(timer!==null)clearInterval(timer);
+timer=null;elapsed=0;render();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Notes App with Local Storage</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:650px;margin:40px auto;padding:0 16px}
+textarea{width:100%;box-sizing:border-box;padding:12px;min-height:100px}
+button{padding:10px 14px;margin:8px 4px 8px 0;cursor:pointer}
+.note{border:1px solid #bbb;padding:12px;margin:10px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<h1>Quick Notes</h1>
+<p>Notes are saved in this browser using localStorage.</p>
+<form id="noteForm">
+<label for="noteInput">New note</label>
+<textarea id="noteInput" required maxlength="500" placeholder="Write a note..."></textarea>
+<button type="submit">Save Note</button>
+</form>
+<h2>Saved Notes</h2>
+<div id="notes"></div>
+<script>
+const form=document.getElementById("noteForm");
+const input=document.getElementById("noteInput");
+const notesContainer=document.getElementById("notes");
+let notes=[];
+try{notes=JSON.parse(localStorage.getItem("frontendNotes")||"[]");if(!Array.isArray(notes))notes=[];}catch(error){notes=[];}
+function save(){localStorage.setItem("frontendNotes",JSON.stringify(notes));}
+function render(){
+notesContainer.replaceChildren();
+if(notes.length===0){const empty=document.createElement("p");empty.textContent="No notes yet.";notesContainer.appendChild(empty);return;}
+notes.forEach(function(note,index){
+const card=document.createElement("article");card.className="note";
+const text=document.createElement("p");text.textContent=note;
+const remove=document.createElement("button");remove.type="button";remove.textContent="Delete note";
+remove.addEventListener("click",function(){notes.splice(index,1);save();render();});
+card.append(text,remove);notesContainer.appendChild(card);
+});
+}
+form.addEventListener("submit",function(event){event.preventDefault();const value=input.value.trim();if(!value)return;notes.unshift(value);save();render();form.reset();input.focus();});
+render();
+</script>
+</body>
+</html>

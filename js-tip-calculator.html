@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Calculator</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:440px;margin:40px auto;padding:0 16px}
+label{display:block;margin-top:14px}
+input,select,button{box-sizing:border-box;width:100%;padding:11px;margin-top:6px}
+#result{padding:14px;background:#f1f1f1;line-height:1.7}
+</style>
+</head>
+<body>
+<h1>Tip Calculator</h1>
+<label for="bill">Bill amount (₹)</label><input id="bill" type="number" min="0" step="0.01" placeholder="e.g. 850">
+<label for="tip">Tip percentage</label>
+<select id="tip"><option value="5">5%</option><option value="10" selected>10%</option><option value="15">15%</option><option value="20">20%</option></select>
+<label for="people">Number of people</label><input id="people" type="number" min="1" step="1" value="1">
+<button id="calculate" type="button">Calculate</button>
+<div id="result" aria-live="polite">Enter your bill details to calculate.</div>
+<script>
+document.getElementById("calculate").addEventListener("click",function(){
+const billText=document.getElementById("bill").value;
+const bill=Number(billText),tip=Number(document.getElementById("tip").value),people=Number(document.getElementById("people").value);
+const result=document.getElementById("result");
+if(billText===""||!Number.isFinite(bill)||bill<0||!Number.isInteger(people)||people<1){result.textContent="Enter a valid bill amount and a whole number of people.";return;}
+const tipAmount=bill*tip/100,total=bill+tipAmount;
+result.textContent="Tip: ₹"+tipAmount.toFixed(2)+" | Total: ₹"+total.toFixed(2)+" | Per person: ₹"+(total/people).toFixed(2);
+});
+</script>
+</body>
+</html>

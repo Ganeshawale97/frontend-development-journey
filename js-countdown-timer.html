@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Countdown Timer</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;max-width:500px;margin:40px auto;padding:0 16px}
+input,button{padding:11px;margin:6px}
+#display{font-size:2.5rem;font-weight:bold;margin:25px}
+</style>
+</head>
+<body>
+<h1>Countdown Timer</h1>
+<label for="seconds">Duration in seconds (1–3600)</label><br>
+<input id="seconds" type="number" min="1" max="3600" value="60">
+<button id="start">Start</button><button id="reset">Reset</button>
+<p id="display" aria-live="polite">01:00</p>
+<script>
+const input=document.getElementById("seconds"),display=document.getElementById("display");
+let remaining=60,interval=null;
+function render(){const m=Math.floor(remaining/60),s=remaining%60;display.textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");}
+function stop(){if(interval!==null)clearInterval(interval);interval=null;}
+document.getElementById("start").addEventListener("click",function(){
+if(interval!==null)return;
+if(remaining<=0){const value=Number(input.value);if(!Number.isInteger(value)||value<1||value>3600){display.textContent="Enter 1–3600 seconds";return;}remaining=value;render();}
+interval=setInterval(function(){remaining--;render();if(remaining<=0){stop();display.textContent="Time's up!";}},1000);
+});
+document.getElementById("reset").addEventListener("click",function(){stop();const value=Number(input.value);remaining=Number.isInteger(value)&&value>=1&&value<=3600?value:60;render();});
+input.addEventListener("change",function(){if(interval===null){const value=Number(input.value);if(Number.isInteger(value)&&value>=1&&value<=3600){remaining=value;render();}}});
+render();
+</script>
+</body>
+</html>

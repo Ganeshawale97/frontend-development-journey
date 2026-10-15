@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Keyboard Events Practice</title>
+</head>
+<body>
+<h1>Keyboard Events</h1>
+<label for="typing">Type in this box:</label><br>
+<input id="typing" type="text" placeholder="Start typing">
+<p id="feedback" aria-live="polite">Your key activity will appear here.</p>
+<script>
+const typing=document.getElementById("typing");
+const feedback=document.getElementById("feedback");
+typing.addEventListener("keydown",function(event){
+feedback.textContent="Key pressed: "+event.key;
+});
+typing.addEventListener("input",function(){
+feedback.textContent="Characters entered: "+typing.value.length;
+});
+</script>
+</body>
+</html>

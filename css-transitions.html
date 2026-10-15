@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Transitions Practice</title>
+<style>
+body{font-family:Arial,sans-serif;text-align:center;padding:40px}
+.card{display:inline-block;padding:28px;border:2px solid #333;border-radius:8px;transition:transform .25s ease,box-shadow .25s ease,background-color .25s ease}
+.card:hover{transform:translateY(-8px);box-shadow:0 10px 24px #0002;background-color:#eef5ff}
+button{padding:10px 16px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>CSS Transitions</h1>
+<p>Hover over the card to see a smooth transition.</p>
+<div class="card"><h2>Hover Me</h2><p>CSS can animate property changes smoothly.</p></div>
+<p><button id="toggle">Toggle Highlight</button></p>
+<script>
+const card=document.querySelector(".card");
+document.getElementById("toggle").addEventListener("click",function(){
+card.style.backgroundColor=card.style.backgroundColor==="rgb(255, 244, 204)"?"":"#fff4cc";
+});
+</script>
+</body>
+</html>

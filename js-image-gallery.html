@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Gallery Practice</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:760px;margin:30px auto;padding:0 16px}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+button{padding:0;border:2px solid transparent;background:none;cursor:pointer}
+button:focus{border-color:#2457c5}
+img{display:block;width:100%;height:120px;object-fit:cover}
+#preview{width:100%;max-height:400px;object-fit:contain;margin-top:18px}
+</style>
+</head>
+<body>
+<h1>Mini Image Gallery</h1>
+<p>Select a thumbnail to view a larger image.</p>
+<div class="gallery" id="gallery">
+<button type="button" data-image="https://picsum.photos/id/1015/900/500" aria-label="View mountain river"><img src="https://picsum.photos/id/1015/240/150" alt="Mountain river thumbnail"></button>
+<button type="button" data-image="https://picsum.photos/id/1011/900/500" aria-label="View forest"><img src="https://picsum.photos/id/1011/240/150" alt="Forest thumbnail"></button>
+<button type="button" data-image="https://picsum.photos/id/1018/900/500" aria-label="View mountain"><img src="https://picsum.photos/id/1018/240/150" alt="Mountain thumbnail"></button>
+</div>
+<img id="preview" src="https://picsum.photos/id/1015/900/500" alt="Selected gallery image">
+<script>
+document.getElementById("gallery").addEventListener("click",function(event){
+const button=event.target.closest("button[data-image]");
+if(!button)return;
+const preview=document.getElementById("preview");
+preview.src=button.dataset.image;
+preview.alt=button.querySelector("img").alt.replace(" thumbnail","");
+});
+</script>
+</body>
+</html>

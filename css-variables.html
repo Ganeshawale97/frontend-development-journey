@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Variables Practice</title>
+<style>
+:root{--primary:#2457c5;--surface:#f2f5fb;--space:20px}
+body{font-family:Arial,sans-serif;margin:0;padding:30px;background:var(--surface)}
+.card{max-width:600px;margin:auto;padding:var(--space);background:white;border-radius:12px;border:2px solid var(--primary)}
+h1{color:var(--primary)}
+button{background:var(--primary);color:white;border:0;padding:10px 14px;border-radius:6px;cursor:pointer}
+</style>
+</head>
+<body>
+<main class="card">
+<h1>CSS Custom Properties</h1>
+<p>CSS variables store reusable values. They are declared with names beginning with <code>--</code> and used with <code>var()</code>.</p>
+<button id="themeButton">Change Theme Color</button>
+</main>
+<script>
+const button=document.getElementById("themeButton");
+let alternate=false;
+button.addEventListener("click",function(){
+alternate=!alternate;
+document.documentElement.style.setProperty("--primary",alternate?"#137547":"#2457c5");
+});
+</script>
+</body>
+</html>

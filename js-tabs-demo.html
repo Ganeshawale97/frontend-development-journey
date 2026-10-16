@@ -1,0 +1,9 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Tabs Demo</title>
+<style>body{font-family:Arial,sans-serif;max-width:620px;margin:30px auto;padding:0 16px}.tab{padding:10px;border:1px solid #777;cursor:pointer}.active{background:#2457c5;color:white}.panel{padding:18px;border:1px solid #aaa}</style></head>
+<body><h1>Interactive Tabs</h1><div id="buttons"><button class="tab active" data-panel="html">HTML</button><button class="tab" data-panel="css">CSS</button><button class="tab" data-panel="js">JavaScript</button></div>
+<section class="panel" id="panel"><h2>HTML</h2><p>HTML gives a webpage its structure.</p></section>
+<script>
+const content={html:["HTML","HTML gives a webpage its structure."],css:["CSS","CSS styles and arranges the page."],js:["JavaScript","JavaScript adds interactivity."]};
+document.getElementById("buttons").addEventListener("click",event=>{const button=event.target.closest("button[data-panel]");if(!button)return;document.querySelectorAll(".tab").forEach(item=>item.classList.toggle("active",item===button));const selected=content[button.dataset.panel];document.getElementById("panel").innerHTML="<h2>"+selected[0]+"</h2><p>"+selected[1]+"</p>";});
+</script></body></html>

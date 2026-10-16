@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pricing Cards</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;padding:32px;background:#f4f6fb;color:#182033}h1{text-align:center}.plans{max-width:900px;margin:28px auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}.plan{background:white;border:1px solid #d6dbea;border-radius:14px;padding:24px}.plan.featured{border:2px solid #3157d5}.price{font-size:2rem;font-weight:bold}.plan button{padding:10px 14px;border:0;border-radius:6px;background:#3157d5;color:white;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Choose a Plan</h1>
+<div class="plans">
+<article class="plan"><h2>Starter</h2><p class="price">₹0</p><p>For learning and practice.</p><ul><li>Basic lessons</li><li>Community support</li></ul><button data-plan="Starter">Choose Starter</button></article>
+<article class="plan featured"><h2>Plus</h2><p class="price">₹499</p><p>For consistent learners.</p><ul><li>Project exercises</li><li>Progress checklist</li></ul><button data-plan="Plus">Choose Plus</button></article>
+<article class="plan"><h2>Pro</h2><p class="price">₹999</p><p>For building a portfolio.</p><ul><li>Advanced projects</li><li>Portfolio guidance</li></ul><button data-plan="Pro">Choose Pro</button></article>
+</div>
+<p id="message" role="status" style="text-align:center"></p>
+<script>
+document.querySelectorAll("[data-plan]").forEach(function(button){button.addEventListener("click",function(){document.getElementById("message").textContent="You selected the "+button.dataset.plan+" demo plan.";});});
+</script>
+</body>
+</html>

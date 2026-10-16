@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS Grid Gallery Practice</title>
+<style>
+*{box-sizing:border-box}
+body{font-family:Arial,sans-serif;margin:0;padding:28px;background:#f4f6fa;color:#202433}
+main{max-width:900px;margin:auto}
+.gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.card{background:white;padding:22px;border:1px solid #d8deea;border-radius:12px;min-height:130px}
+.card h2{margin-top:0}
+.card:nth-child(even){background:#eaf1ff}
+</style>
+</head>
+<body>
+<main>
+<h1>CSS Grid Gallery</h1>
+<p>This responsive layout uses <code>grid-template-columns</code> and <code>gap</code>.</p>
+<section class="gallery" aria-label="Example cards">
+<article class="card"><h2>HTML</h2><p>Structure your webpages.</p></article>
+<article class="card"><h2>CSS</h2><p>Style and arrange content.</p></article>
+<article class="card"><h2>JavaScript</h2><p>Add interactive behavior.</p></article>
+<article class="card"><h2>Accessibility</h2><p>Make pages usable by more people.</p></article>
+<article class="card"><h2>Responsive</h2><p>Adapt layouts to different screens.</p></article>
+<article class="card"><h2>Practice</h2><p>Build something small every day.</p></article>
+</section>
+</main>
+</body>
+</html>

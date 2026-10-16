@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Filter a List</title>
+<style>body{font-family:Arial,sans-serif;max-width:560px;margin:32px auto;padding:0 16px}input{width:100%;padding:12px}li{padding:8px 0}</style>
+</head>
+<body>
+<h1>Filter Learning Topics</h1>
+<label for="search">Search topics:</label>
+<input id="search" type="search" placeholder="Try CSS or JavaScript">
+<ul id="topics"><li>HTML Fundamentals</li><li>CSS Flexbox</li><li>CSS Grid</li><li>JavaScript Basics</li><li>DOM Manipulation</li><li>Responsive Design</li><li>Git and GitHub</li></ul>
+<p id="status" aria-live="polite"></p>
+<script>
+const search=document.getElementById("search");const items=Array.from(document.querySelectorAll("#topics li"));const status=document.getElementById("status");
+search.addEventListener("input",function(){const query=search.value.trim().toLowerCase();let visible=0;items.forEach(function(item){const match=item.textContent.toLowerCase().includes(query);item.hidden=!match;if(match)visible++;});status.textContent=visible+" topic(s) found.";});
+</script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Text Case Converter</title>
+<style>body{font-family:Arial,sans-serif;max-width:650px;margin:32px auto;padding:0 16px}textarea{width:100%;box-sizing:border-box;padding:12px}button{padding:10px;margin:8px 6px 8px 0;cursor:pointer}</style>
+</head>
+<body>
+<h1>Text Case Converter</h1><label for="text">Enter your text:</label><textarea id="text" rows="6" placeholder="Type or paste text here..."></textarea>
+<div><button data-case="upper">UPPERCASE</button><button data-case="lower">lowercase</button><button data-case="title">Title Case</button><button id="clear">Clear</button></div>
+<p id="status" role="status"></p>
+<script>
+const textArea=document.getElementById("text");document.querySelectorAll("[data-case]").forEach(function(button){button.addEventListener("click",function(){const mode=button.dataset.case;if(mode==="upper")textArea.value=textArea.value.toUpperCase();else if(mode==="lower")textArea.value=textArea.value.toLowerCase();else textArea.value=textArea.value.toLowerCase().replace(/\b\w/g,function(char){return char.toUpperCase();});document.getElementById("status").textContent="Text converted to "+mode+" case.";});});
+document.getElementById("clear").addEventListener("click",function(){textArea.value="";document.getElementById("status").textContent="Text cleared.";});
+</script>
+</body>
+</html>

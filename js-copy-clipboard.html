@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Copy to Clipboard Practice</title>
+<style>
+body{font-family:Arial,sans-serif;max-width:620px;margin:36px auto;padding:0 16px}
+textarea{display:block;width:100%;min-height:130px;padding:12px;font:inherit;box-sizing:border-box}
+button{margin-top:10px;padding:10px 14px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Copy Text to Clipboard</h1>
+<label for="textToCopy">Text to copy</label>
+<textarea id="textToCopy">I am learning frontend development one project at a time!</textarea>
+<button id="copyButton" type="button">Copy Text</button>
+<p id="status" aria-live="polite"></p>
+<script>
+const textArea=document.getElementById("textToCopy");
+const status=document.getElementById("status");
+document.getElementById("copyButton").addEventListener("click",async()=>{
+try{
+if(!navigator.clipboard||!window.isSecureContext)throw new Error("Clipboard API unavailable");
+await navigator.clipboard.writeText(textArea.value);
+status.textContent="Text copied successfully.";
+}catch(error){
+textArea.focus();textArea.select();
+status.textContent="Automatic copying is unavailable here. The text is selected; use Ctrl+C or Cmd+C.";
+}
+});
+</script>
+</body>
+</html>

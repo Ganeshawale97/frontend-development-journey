@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Sort a List</title>
+<style>body{font-family:Arial,sans-serif;max-width:560px;margin:36px auto;padding:0 16px}button{padding:10px 14px;cursor:pointer}li{padding:8px;border-bottom:1px solid #ddd}</style></head>
+<body><h1>Sort a List with JavaScript</h1><p>Click a button to sort the names alphabetically or reverse the order.</p><button id="ascending">A to Z</button> <button id="descending">Z to A</button><ul id="names"><li>Riya</li><li>Aman</li><li>Ganesh</li><li>Priya</li><li>Neha</li></ul>
+<script>
+const list=document.getElementById("names");
+function sortNames(direction){const names=Array.from(list.children).map(item=>item.textContent);names.sort((a,b)=>a.localeCompare(b));if(direction==="desc")names.reverse();list.replaceChildren(...names.map(name=>{const item=document.createElement("li");item.textContent=name;return item;}));}
+document.getElementById("ascending").addEventListener("click",()=>sortNames("asc"));
+document.getElementById("descending").addEventListener("click",()=>sortNames("desc"));
+</script></body></html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modal Dialog</title>
+<style>
+body{font-family:Arial,sans-serif;padding:32px}.modal{border:0;border-radius:12px;max-width:420px;width:calc(100% - 32px);padding:24px;box-shadow:0 8px 30px #0003}.modal::backdrop{background:#1119}button{padding:10px 14px;cursor:pointer}
+</style>
+</head>
+<body>
+<h1>Modal Dialog Practice</h1><p>Click the button to open a dialog without leaving the page.</p>
+<button id="openModal">Open Dialog</button>
+<dialog class="modal" id="modal"><h2>Hello!</h2><p>This is a native HTML dialog controlled with JavaScript.</p><button id="closeModal">Close</button></dialog>
+<script>
+const modal=document.getElementById("modal");document.getElementById("openModal").addEventListener("click",function(){modal.showModal();});document.getElementById("closeModal").addEventListener("click",function(){modal.close();});
+modal.addEventListener("click",function(event){if(event.target===modal)modal.close();});
+</script>
+</body>
+</html>

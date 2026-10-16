@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Number Guessing Game</title>
+<style>body{font-family:Arial,sans-serif;max-width:520px;margin:36px auto;padding:0 16px}input,button{padding:10px;margin:5px 0}#message{font-weight:bold}</style></head>
+<body><h1>Number Guessing Game</h1><p>Guess the secret number from 1 to 20.</p><form id="guessForm"><label for="guess">Your guess:</label><input id="guess" type="number" min="1" max="20" required><button>Check Guess</button></form><p id="message" aria-live="polite"></p><button id="restart" type="button">New Game</button>
+<script>
+let secret=Math.floor(Math.random()*20)+1,attempts=0,finished=false;
+const input=document.getElementById("guess"),message=document.getElementById("message");
+document.getElementById("guessForm").addEventListener("submit",event=>{event.preventDefault();if(finished)return;const value=Number(input.value);if(!Number.isInteger(value)||value<1||value>20){message.textContent="Enter a whole number from 1 to 20.";return;}attempts++;if(value===secret){message.textContent="Correct! You guessed it in "+attempts+" attempt(s).";finished=true;}else{message.textContent=value<secret?"Too low. Try again.":"Too high. Try again."; }input.select();});
+document.getElementById("restart").addEventListener("click",()=>{secret=Math.floor(Math.random()*20)+1;attempts=0;finished=false;input.value="";message.textContent="New game started.";input.focus();});
+</script></body></html>

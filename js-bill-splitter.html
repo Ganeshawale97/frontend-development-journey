@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill Splitter</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:20px;background:#f0f8f5;color:#18362d;font-family:Arial,sans-serif}
+    .app{width:min(100%,450px);background:#fff;padding:28px;border-radius:20px;box-shadow:0 12px 35px #153e2d14}
+    label{display:block;margin:16px 0 7px;font-weight:bold}input{width:100%;padding:12px;border:1px solid #bdd4c9;border-radius:9px;font-size:1rem}
+    button{width:100%;margin-top:20px;padding:13px;background:#167451;color:#fff;border:0;border-radius:9px;font-weight:bold;font-size:1rem;cursor:pointer}
+    .result{margin-top:20px;padding:18px;background:#e5f6ed;border-radius:12px;line-height:1.8}.result strong{font-size:1.35rem}.hint{color:#597167;line-height:1.5}.error{color:#b42318;min-height:1.3em}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <h1>Bill Splitter</h1>
+    <p class="hint">Enter a bill, optional tip percentage, and number of people to calculate each person's share.</p>
+    <form id="bill-form">
+      <label for="bill">Bill amount (₹)</label><input id="bill" type="number" min="0.01" step="0.01" placeholder="e.g. 1200" required>
+      <label for="tip">Tip (%)</label><input id="tip" type="number" min="0" max="100" step="1" value="5" required>
+      <label for="people">Number of people</label><input id="people" type="number" min="1" step="1" value="2" required>
+      <button type="submit">Calculate share</button>
+    </form>
+    <p class="error" id="error" role="alert"></p>
+    <section class="result" aria-live="polite">
+      Bill with tip: ₹<span id="total">0.00</span><br>
+      Each person pays:<br><strong>₹<span id="share">0.00</span></strong>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector("#bill-form");
+    const error = document.querySelector("#error");
+    const totalOutput = document.querySelector("#total");
+    const shareOutput = document.querySelector("#share");
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const bill = Number(document.querySelector("#bill").value);
+      const tip = Number(document.querySelector("#tip").value);
+      const people = Number(document.querySelector("#people").value);
+
+      if (bill <= 0 || tip < 0 || tip > 100 || !Number.isInteger(people) || people < 1) {
+        error.textContent = "Please enter a positive bill, a tip from 0–100%, and at least one person.";
+        return;
+      }
+      error.textContent = "";
+      const total = bill * (1 + tip / 100);
+      totalOutput.textContent = total.toFixed(2);
+      shareOutput.textContent = (total / people).toFixed(2);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmark Manager</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#202943;font-family:Arial,sans-serif}
+    main{max-width:760px;margin:auto;padding:35px 18px}.panel{background:#fff;border-radius:16px;padding:24px;box-shadow:0 8px 28px #17264a10}
+    form{display:grid;grid-template-columns:1fr 1fr auto;gap:10px}label{display:block;font-size:.9rem;font-weight:bold;margin-bottom:6px}
+    input{width:100%;padding:11px;border:1px solid #cbd2e3;border-radius:8px;font-size:1rem}button{padding:11px 14px;border:0;border-radius:8px;background:#3449c5;color:#fff;font-weight:bold;cursor:pointer}
+    ul{list-style:none;padding:0;margin:20px 0 0}.item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0;border-bottom:1px solid #e8ebf3}
+    .item a{color:#3449c5;overflow-wrap:anywhere}.delete{background:#a72c3b;flex-shrink:0}.empty,.hint{color:#626c82;line-height:1.5}
+    @media(max-width:600px){form{grid-template-columns:1fr}.item{align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Bookmark Manager</h1>
+    <p class="hint">Save useful links in this browser. This project practises forms, arrays, DOM rendering, and <code>localStorage</code>.</p>
+    <section class="panel">
+      <form id="bookmark-form">
+        <div><label for="title">Website name</label><input id="title" maxlength="60" placeholder="MDN Web Docs" required></div>
+        <div><label for="url">Website URL</label><input id="url" type="url" placeholder="https://developer.mozilla.org" required></div>
+        <button type="submit">Add bookmark</button>
+      </form>
+      <p id="message" class="hint" aria-live="polite"></p>
+      <ul id="bookmarks"></ul>
+    </section>
+  </main>
+  <script>
+    const form = document.querySelector("#bookmark-form");
+    const list = document.querySelector("#bookmarks");
+    const message = document.querySelector("#message");
+    let bookmarks = [];
+
+    try {
+      bookmarks = JSON.parse(localStorage.getItem("practice-bookmarks") || "[]");
+      if (!Array.isArray(bookmarks)) bookmarks = [];
+    } catch {
+      bookmarks = [];
+    }
+
+    function renderBookmarks() {
+      list.replaceChildren();
+      if (bookmarks.length === 0) {
+        const empty = document.createElement("li");
+        empty.className = "empty";
+        empty.textContent = "No bookmarks yet. Add your first link above.";
+        list.append(empty);
+        return;
+      }
+      bookmarks.forEach(bookmark => {
+        const item = document.createElement("li");
+        item.className = "item";
+        const link = document.createElement("a");
+        link.href = bookmark.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.textContent = bookmark.title;
+        const remove = document.createElement("button");
+        remove.className = "delete";
+        remove.type = "button";
+        remove.textContent = "Remove";
+        remove.setAttribute("aria-label", "Remove " + bookmark.title);
+        remove.addEventListener("click", () => {
+          bookmarks = bookmarks.filter(entry => entry.id !== bookmark.id);
+          saveAndRender();
+          message.textContent = "Bookmark removed.";
+        });
+        item.append(link, remove);
+        list.append(item);
+      });
+    }
+
+    function saveAndRender() {
+      localStorage.setItem("practice-bookmarks", JSON.stringify(bookmarks));
+      renderBookmarks();
+    }
+
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      const title = document.querySelector("#title").value.trim();
+      const url = document.querySelector("#url").value.trim();
+      if (!title || !url) return;
+      bookmarks.unshift({ id: Date.now(), title, url });
+      saveAndRender();
+      form.reset();
+      message.textContent = "Bookmark saved in this browser.";
+    });
+
+    renderBookmarks();
+  </script>
+</body>
+</html>

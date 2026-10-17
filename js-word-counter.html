@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Word Counter</title>
+<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff7ed;display:grid;place-items:center;min-height:100vh;margin:0;padding:20px}.card{background:white;padding:26px;border-radius:16px;max-width:600px;width:100%;box-shadow:0 10px 30px #9a341218}textarea{width:100%;min-height:190px;padding:14px;border:1px solid #fdba74;border-radius:10px;font:1rem/1.5 Arial;resize:vertical}.stats{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}.stat{flex:1;min-width:120px;background:#ffedd5;padding:14px;border-radius:10px}.number{font-size:1.6rem;font-weight:bold;display:block;color:#9a3412}</style></head>
+<body><main class="card"><h1>Live Word Counter</h1><p>Type or paste text below. Counts update automatically.</p><textarea id="text" placeholder="Start writing here..." aria-label="Text to count"></textarea>
+<div class="stats"><div class="stat"><span class="number" id="words">0</span>Words</div><div class="stat"><span class="number" id="chars">0</span>Characters</div><div class="stat"><span class="number" id="noSpaces">0</span>Without spaces</div></div><small>Practice: input events, trim(), split(), and string length.</small></main>
+<script>
+const text = document.querySelector("#text");
+function updateCounts() {
+  const value = text.value;
+  const trimmed = value.trim();
+  document.querySelector("#words").textContent = trimmed ? trimmed.split(/\s+/).length : 0;
+  document.querySelector("#chars").textContent = value.length;
+  document.querySelector("#noSpaces").textContent = value.replace(/\s/g, "").length;
+}
+text.addEventListener("input", updateCounts);
+</script></body></html>

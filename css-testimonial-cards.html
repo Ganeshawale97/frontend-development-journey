@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Testimonial Cards</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;background:#f6f5ff;color:#25243a;font-family:Arial,sans-serif}
+    main{max-width:1100px;margin:auto;padding:42px 20px}header{text-align:center;margin-bottom:32px}header p{color:#66647a;line-height:1.6}
+    .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+    .card{background:#fff;border-radius:18px;padding:25px;box-shadow:0 10px 30px #302d5012;display:flex;flex-direction:column;gap:15px}
+    .stars{color:#e7a51a;letter-spacing:3px}.quote{line-height:1.7;color:#56556b;margin:0;flex:1}
+    .person{display:flex;align-items:center;gap:12px;border-top:1px solid #eceaf5;padding-top:16px}
+    .avatar{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:#e4e2ff;font-weight:bold;color:#4435a7}
+    h1{margin-bottom:8px}h2{font-size:1.05rem;margin:0}.role{margin:5px 0 0;color:#77758a;font-size:.9rem}
+    .tip{margin-top:25px;padding:16px;border-left:4px solid #6b5ce7;background:#ebe9ff;border-radius:8px;line-height:1.6}
+  </style>
+</head>
+<body>
+  <main>
+    <header><h1>What People Say</h1><p>A responsive testimonial layout built with CSS Grid, reusable cards, and flexible spacing.</p></header>
+    <section class="cards" aria-label="Customer testimonials">
+      <article class="card"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p class="quote">“The layout is simple to use and looks great on my phone as well as my laptop.”</p><div class="person"><div class="avatar" aria-hidden="true">AM</div><div><h2>Aarav Mehta</h2><p class="role">Student</p></div></div></article>
+      <article class="card"><div class="stars" aria-label="5 out of 5 stars">★★★★★</div><p class="quote">“I could quickly find what I needed. The clear spacing makes every section easy to read.”</p><div class="person"><div class="avatar" aria-hidden="true">SK</div><div><h2>Sana Khan</h2><p class="role">Designer</p></div></div></article>
+      <article class="card"><div class="stars" aria-label="4 out of 5 stars">★★★★☆</div><p class="quote">“A clean experience with thoughtful details. I especially like the compact profile section.”</p><div class="person"><div class="avatar" aria-hidden="true">RP</div><div><h2>Rohan Patil</h2><p class="role">Developer</p></div></div></article>
+    </section>
+    <p class="tip"><strong>Practice challenge:</strong> Add a fourth card and change the minimum card width. Watch how <code>auto-fit</code> and <code>minmax()</code> rearrange the grid.</p>
+  </main>
+</body>
+</html>

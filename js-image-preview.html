@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Image Preview</title>
+<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f5f3ff;min-height:100vh;display:grid;place-items:center;margin:0;padding:20px}.card{background:white;padding:26px;border-radius:16px;max-width:520px;width:100%;text-align:center;box-shadow:0 10px 30px #5b21b618}input{margin:16px auto;max-width:100%}img{display:none;max-width:100%;max-height:320px;object-fit:contain;border-radius:12px;margin:12px auto}#message{color:#5b21b6}</style></head>
+<body><main class="card"><h1>Image Preview</h1><p>Select an image from your device to preview it before uploading.</p>
+<input type="file" id="file" accept="image/*"><p id="message" aria-live="polite">No image selected.</p><img id="preview" alt="Selected image preview"><small>Practice: file inputs, FileReader, and handling events.</small></main>
+<script>
+const fileInput = document.querySelector("#file");
+const preview = document.querySelector("#preview");
+const message = document.querySelector("#message");
+let currentUrl = null;
+fileInput.addEventListener("change", () => {
+  const file = fileInput.files[0];
+  if (currentUrl) URL.revokeObjectURL(currentUrl);
+  if (!file) { preview.style.display = "none"; message.textContent = "No image selected."; return; }
+  if (!file.type.startsWith("image/")) { preview.style.display = "none"; message.textContent = "Please choose an image file."; return; }
+  currentUrl = URL.createObjectURL(file);
+  preview.src = currentUrl;
+  preview.style.display = "block";
+  message.textContent = file.name + " · " + Math.round(file.size / 1024) + " KB";
+});
+</script></body></html>

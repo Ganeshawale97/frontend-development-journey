@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Unit Converter</title>
+<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#f0fdfa;min-height:100vh;display:grid;place-items:center;margin:0;padding:20px}.card{background:white;padding:26px;border-radius:16px;width:100%;max-width:430px;box-shadow:0 10px 30px #0f766e18}label{display:block;margin-top:14px}input,select,button{width:100%;padding:12px;margin-top:6px;border:1px solid #cbd5e1;border-radius:8px;font-size:1rem}button{background:#0f766e;color:white;border:0;cursor:pointer}#output{font-size:1.3rem;font-weight:bold;overflow-wrap:anywhere}</style></head>
+<body><main class="card"><h1>Length Converter</h1><p>Convert between metres, kilometres, centimetres, and miles.</p>
+<label for="value">Value</label><input id="value" type="number" min="0" step="any" value="1">
+<label for="from">From</label><select id="from"><option value="m">Metres</option><option value="km">Kilometres</option><option value="cm">Centimetres</option><option value="mi">Miles</option></select>
+<label for="to">To</label><select id="to"><option value="km">Kilometres</option><option value="m">Metres</option><option value="cm">Centimetres</option><option value="mi">Miles</option></select>
+<button id="convert">Convert</button><p id="output" aria-live="polite">1 m = 0.001 km</p><small>Practice: objects, lookup values, and event listeners.</small></main>
+<script>
+const factors = {m:1, km:1000, cm:0.01, mi:1609.344};
+const labels = {m:"metres", km:"kilometres", cm:"centimetres", mi:"miles"};
+const value = document.querySelector("#value"), from = document.querySelector("#from"), to = document.querySelector("#to"), output = document.querySelector("#output");
+function convert() {
+  if (value.value === "" || Number(value.value) < 0) { output.textContent = "Enter a valid non-negative number."; return; }
+  const answer = Number(value.value) * factors[from.value] / factors[to.value];
+  output.textContent = Number(value.value) + " " + labels[from.value] + " = " + Number(answer.toPrecision(8)) + " " + labels[to.value];
+}
+document.querySelector("#convert").addEventListener("click", convert);
+[value, from, to].forEach(el => el.addEventListener("input", convert));
+convert();
+</script></body></html>

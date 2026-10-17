@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Age Calculator | Frontend Practice</title>
+<style>
+*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#eef2ff;display:grid;place-items:center;min-height:100vh;margin:0;padding:20px;color:#172554}.card{background:white;padding:28px;border-radius:18px;max-width:420px;width:100%;box-shadow:0 12px 35px #1e3a8a18}h1{margin-top:0}label,input,button{display:block;width:100%;margin-top:12px}input,button{padding:12px;border-radius:9px;font-size:1rem}input{border:1px solid #cbd5e1}button{border:0;background:#4338ca;color:white;cursor:pointer}#result{font-weight:bold;margin-top:18px;line-height:1.5}
+</style></head>
+<body><main class="card"><h1>Age Calculator</h1><p>Choose your date of birth to calculate your age.</p>
+<label for="birthDate">Date of birth</label><input id="birthDate" type="date">
+<button id="calculate">Calculate age</button><p id="result" aria-live="polite">Your age will appear here.</p>
+<p><small>Practice: Date objects, conditionals, and DOM updates.</small></p></main>
+<script>
+const birthDate = document.querySelector("#birthDate");
+const result = document.querySelector("#result");
+document.querySelector("#calculate").addEventListener("click", () => {
+  if (!birthDate.value) { result.textContent = "Please select your date of birth."; return; }
+  const birth = new Date(birthDate.value + "T00:00:00");
+  const today = new Date();
+  if (birth > today) { result.textContent = "Birth date cannot be in the future."; return; }
+  let years = today.getFullYear() - birth.getFullYear();
+  let months = today.getMonth() - birth.getMonth();
+  let days = today.getDate() - birth.getDate();
+  if (days < 0) { months--; days += new Date(today.getFullYear(), today.getMonth(), 0).getDate(); }
+  if (months < 0) { years--; months += 12; }
+  result.textContent = "You are " + years + " years, " + months + " months, and " + days + " days old.";
+});
+</script></body></html>

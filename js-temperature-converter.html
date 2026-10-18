@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Temperature Converter</title>
+<style>*{box-sizing:border-box}body{font-family:Arial,sans-serif;background:#fff7ed;color:#7c2d12;min-height:100vh;display:grid;place-items:center;margin:0;padding:20px}.card{max-width:430px;width:100%;background:white;padding:28px;border-radius:18px;box-shadow:0 10px 30px #9a341218}label{display:block;margin:16px 0 6px}input,select,button{width:100%;padding:12px;border-radius:8px;font:inherit}input,select{border:1px solid #fed7aa}button{margin-top:18px;border:0;background:#c2410c;color:white;cursor:pointer}#result{font-size:1.3rem;font-weight:bold;min-height:1.6em}</style></head>
+<body><main class="card"><h1>Temperature Converter</h1><p>Convert Celsius to Fahrenheit or Fahrenheit to Celsius.</p>
+<label for="temperature">Temperature</label><input type="number" id="temperature" value="25" step="any">
+<label for="direction">Conversion</label><select id="direction"><option value="c-f">Celsius → Fahrenheit</option><option value="f-c">Fahrenheit → Celsius</option></select>
+<button id="convert">Convert temperature</button><p id="result" aria-live="polite">25°C = 77°F</p><small>Formula: °F = (°C × 9/5) + 32</small></main>
+<script>
+const input=document.querySelector("#temperature"), direction=document.querySelector("#direction"), result=document.querySelector("#result");
+function convert(){
+ if(input.value.trim()===""){result.textContent="Enter a temperature first.";return;}
+ const n=Number(input.value);
+ if(direction.value==="c-f") result.textContent=n+"°C = "+((n*9/5)+32).toFixed(2)+"°F";
+ else result.textContent=n+"°F = "+((n-32)*5/9).toFixed(2)+"°C";
+}
+document.querySelector("#convert").addEventListener("click",convert);
+input.addEventListener("keydown",event=>{if(event.key==="Enter")convert();});
+direction.addEventListener("change",convert);
+</script></body></html>

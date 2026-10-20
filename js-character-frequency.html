@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Character Frequency Analyzer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:24px;background:#f8fafc;color:#0f172a;font-family:Arial,sans-serif}main{max-width:650px;margin:auto;background:white;padding:24px;border:1px solid #e2e8f0;border-radius:16px}
+textarea{width:100%;min-height:150px;padding:12px;border:1px solid #cbd5e1;border-radius:9px;font:inherit;resize:vertical}
+button{margin:12px 0;padding:11px 16px;background:#0f766e;color:white;border:0;border-radius:8px;cursor:pointer}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0}.stat{background:#f0fdfa;padding:12px;border-radius:8px;flex:1;min-width:120px}
+table{width:100%;border-collapse:collapse;margin-top:14px}th,td{text-align:left;padding:9px;border-bottom:1px solid #e2e8f0}th{background:#f1f5f9}#results{overflow-x:auto}
+</style></head><body><main><h1>Character Frequency Analyzer</h1><p>Type or paste text to count each character. Spaces are included in the total but hidden from the frequency list.</p>
+<label for="text">Your text</label><textarea id="text" placeholder="Write something here..."></textarea><button id="analyze">Analyze text</button>
+<div class="stats"><div class="stat">Characters<strong id="total" style="display:block;font-size:1.5rem">0</strong></div><div class="stat">Without spaces<strong id="nospace" style="display:block;font-size:1.5rem">0</strong></div><div class="stat">Unique characters<strong id="unique" style="display:block;font-size:1.5rem">0</strong></div></div>
+<div id="results" aria-live="polite"></div>
+<script>
+const textArea=document.querySelector("#text"),results=document.querySelector("#results");
+function analyze(){
+ const text=textArea.value,counts=new Map();
+ for(const character of text){if(/\s/u.test(character))continue;const key=character.toLocaleLowerCase();counts.set(key,(counts.get(key)||0)+1);}
+ document.querySelector("#total").textContent=Array.from(text).length;
+ document.querySelector("#nospace").textContent=Array.from(text).filter(ch=>!(/\s/u.test(ch))).length;
+ document.querySelector("#unique").textContent=counts.size;
+ results.replaceChildren();
+ if(!counts.size){results.textContent="Enter some text to see character counts.";return;}
+ const table=document.createElement("table"),head=document.createElement("tr");
+ ["Character","Frequency"].forEach(label=>{const th=document.createElement("th");th.textContent=label;head.append(th);});
+ const thead=document.createElement("thead");thead.append(head);table.append(thead);
+ const body=document.createElement("tbody");
+ [...counts.entries()].sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).forEach(([character,count])=>{const row=document.createElement("tr"),charCell=document.createElement("td"),countCell=document.createElement("td");charCell.textContent=character;countCell.textContent=count;row.append(charCell,countCell);body.append(row);});
+ table.append(body);results.append(table);
+}
+document.querySelector("#analyze").addEventListener("click",analyze);
+textArea.addEventListener("input",analyze);analyze();
+</script></main></body></html>

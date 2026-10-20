@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Profile Preview</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:24px;font-family:Arial,sans-serif;background:#f1f5f9;color:#0f172a}
+.layout{max-width:850px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{background:white;border-radius:16px;padding:22px;box-shadow:0 8px 24px #0f172a0c}
+label{display:block;margin:14px 0 6px}input,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}
+textarea{min-height:100px;resize:vertical}.avatar{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:#dbeafe;color:#1d4ed8;font-size:1.5rem;font-weight:bold}
+.preview h2{margin-bottom:6px}.preview p{line-height:1.5;color:#475569;white-space:pre-wrap;overflow-wrap:anywhere}
+@media(max-width:650px){.layout{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<main class="layout">
+<section class="panel">
+<h1>Edit your profile</h1>
+<label for="name">Name</label><input id="name" maxlength="60" value="Alex Morgan">
+<label for="role">Role</label><input id="role" maxlength="80" value="Frontend Developer in Training">
+<label for="bio">Short bio</label><textarea id="bio" maxlength="240">I enjoy building simple, useful websites while learning HTML, CSS, and JavaScript.</textarea>
+<small>Changes appear in the preview instantly.</small>
+</section>
+<section class="panel preview" aria-label="Live profile preview">
+<div class="avatar" id="initials">AM</div><h2 id="previewName">Alex Morgan</h2>
+<strong id="previewRole">Frontend Developer in Training</strong>
+<p id="previewBio">I enjoy building simple, useful websites while learning HTML, CSS, and JavaScript.</p>
+</section>
+</main>
+<script>
+const fields={name:document.querySelector("#name"),role:document.querySelector("#role"),bio:document.querySelector("#bio")};
+function update(){
+ const name=fields.name.value.trim()||"Your name";
+ document.querySelector("#previewName").textContent=name;
+ document.querySelector("#previewRole").textContent=fields.role.value.trim()||"Your role";
+ document.querySelector("#previewBio").textContent=fields.bio.value.trim()||"Your bio will appear here.";
+ document.querySelector("#initials").textContent=name.split(/\s+/).slice(0,2).map(word=>word[0].toUpperCase()).join("");
+}
+Object.values(fields).forEach(field=>field.addEventListener("input",update));update();
+</script>
+</body></html>

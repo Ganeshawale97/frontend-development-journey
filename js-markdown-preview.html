@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Live Text Preview</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:24px;background:#f1f5f9;font-family:system-ui,sans-serif;color:#172033}.wrap{max-width:950px;margin:auto}.panes{display:grid;grid-template-columns:1fr 1fr;gap:16px}.pane{background:white;padding:18px;border-radius:14px;border:1px solid #dbe3ee}textarea{width:100%;min-height:300px;padding:12px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;resize:vertical}.preview{min-height:300px;white-space:pre-wrap;overflow-wrap:anywhere}.small{color:#64748b;font-size:.9rem}@media(max-width:650px){.panes{grid-template-columns:1fr}}
+</style></head><body><main class="wrap"><h1>Live Text Preview</h1><p class="small">A safe text preview: input is displayed as text, not interpreted as HTML.</p><div class="panes"><section class="pane"><h2>Write</h2><label for="source">Enter text</label><textarea id="source" placeholder="Type something...">Hello, world!
+This is a live preview.
+Your text updates as you type.</textarea></section><section class="pane"><h2>Preview</h2><div id="preview" class="preview" aria-live="polite"></div></section></div>
+<script>
+const source=document.querySelector("#source"),preview=document.querySelector("#preview");function update(){preview.textContent=source.value||"Your preview will appear here.";}source.addEventListener("input",update);update();
+</script></main></body></html>

@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Semantic HTML Landmarks</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font:16px/1.6 system-ui,sans-serif;color:#172033;background:#f8fafc}header,nav,main,aside,footer{padding:18px;border:1px solid #cbd5e1;border-radius:10px}header,footer{background:#e0e7ff}nav{background:#fef3c7}main{background:white}aside{background:#dcfce7}.layout{max-width:900px;margin:auto;padding:20px;display:grid;gap:14px}.content{display:grid;grid-template-columns:2fr 1fr;gap:14px}a{margin-right:12px;color:#1d4ed8}@media(max-width:600px){.content{grid-template-columns:1fr}}
+</style></head><body><div class="layout">
+<header><h1>Semantic HTML Landmarks</h1><p>The page structure is built with meaningful HTML elements.</p></header>
+<nav aria-label="Main navigation"><a href="#article">Article</a><a href="#resources">Resources</a><a href="#footer">Footer</a></nav>
+<div class="content"><main id="article"><h2>Main content</h2><article><h3>Why landmarks matter</h3><p>Elements such as header, nav, main, article, aside, and footer communicate the purpose of page regions to browsers and assistive technology.</p></article></main>
+<aside id="resources"><h2>Resources</h2><p>Use one main landmark per page and label navigation regions when there is more than one.</p></aside></div>
+<footer id="footer"><p>Semantic HTML practice page</p></footer></div></body></html>

@@ -1,0 +1,8 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Notes Preview</title><style>body{font:16px system-ui;background:#f1f5f9;padding:24px;color:#0f172a}.wrap{max-width:1000px;margin:auto}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}textarea,.preview{min-height:340px;width:100%;box-sizing:border-box;padding:18px;border:1px solid #cbd5e1;border-radius:14px;background:white;font:15px/1.6 monospace}.preview{font:16px/1.6 system-ui}@media(max-width:700px){.grid{grid-template-columns:1fr}}</style><main class="wrap"><h1>Live notes preview</h1><div class="grid"><textarea id="source" aria-label="Markdown input"># My learning log
+Today I practised **JavaScript DOM**.
+
+- Select elements
+- Add event listeners
+- Update the page
+
+Use `console.log()` to debug.</textarea><article id="preview" class="preview" aria-live="polite"></article></div></main><script>const source=document.querySelector('#source'),preview=document.querySelector('#preview');function esc(s){return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]))}function render(){let list=false,html='';for(const line of esc(source.value).split('\n')){if(line.startsWith('- ')){if(!list){html+='<ul>';list=true}html+='<li>'+line.slice(2)+'</li>';continue}if(list){html+='</ul>';list=false}if(line.startsWith('# '))html+='<h1>'+line.slice(2)+'</h1>';else if(line.startsWith('## '))html+='<h2>'+line.slice(3)+'</h2>';else if(line.trim())html+='<p>'+line+'</p>'}if(list)html+='</ul>';preview.innerHTML=html.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/`([^`]+)`/g,'<code>$1</code>')}source.addEventListener('input',render);render();</script>

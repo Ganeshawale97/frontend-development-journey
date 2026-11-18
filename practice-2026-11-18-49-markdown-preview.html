@@ -1,0 +1,8 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Live Text Preview</title><style>body{font:16px system-ui;background:#f1f5f9;margin:0;padding:24px}.layout{max-width:950px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:16px}.pane{background:white;padding:20px;border-radius:14px}textarea{width:100%;min-height:260px;box-sizing:border-box;padding:12px;font:15px monospace}@media(max-width:650px){.layout{grid-template-columns:1fr}}</style></head><body><main><h1>Live text preview</h1><div class="layout"><section class="pane"><h2>Write</h2><textarea id="source"># Hello world
+
+This is a **live preview**.
+
+- Learn HTML
+- Practice CSS
+- Build with JavaScript</textarea></section><section class="pane"><h2>Preview</h2><div id="preview"></div></section></div></main><script>const source=document.querySelector('#source'),preview=document.querySelector('#preview');function escapeHTML(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}function render(){let html=escapeHTML(source.value);html=html.replace(/^### (.*)$/gm,'<h3>$1</h3>').replace(/^## (.*)$/gm,'<h2>$1</h2>').replace(/^# (.*)$/gm,'<h1>$1</h1>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/^\- (.*)$/gm,'<li>$1</li>').replace(/\n/g,'<br>');preview.innerHTML=html}source.addEventListener('input',render);render();</script></body></html>

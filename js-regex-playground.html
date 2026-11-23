@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Regex Playground | Frontend Playground</title>
+<style>
+:root{color-scheme:dark;--bg:#0b1020;--panel:#141d31;--line:#2a3956;--text:#edf3ff;--muted:#a8b5ca;--accent:#8ba7ff;--good:#61dfb4;--bad:#ff9d9d}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0,#1b2c4b,var(--bg) 55%);color:var(--text);font:16px/1.5 system-ui,sans-serif}.wrap{max-width:1050px;margin:auto;padding:34px 20px 60px}a{color:var(--accent)}.eyebrow{color:var(--good);font-size:.78rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase}h1{font-size:clamp(2rem,5vw,3.4rem);margin:.4rem 0}.lead{color:var(--muted);max-width:680px}.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;margin-top:22px}.fields{display:grid;grid-template-columns:2fr 1fr;gap:14px}label{display:block;font-weight:650;margin-bottom:7px}input,textarea,select{width:100%;background:#0b1324;color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}textarea{min-height:190px;resize:vertical}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}button{border:0;border-radius:10px;background:#344d83;color:white;padding:11px 16px;font:inherit;font-weight:700;cursor:pointer}button.secondary{background:#263247}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid var(--accent);outline-offset:2px}.summary{color:var(--muted);margin:0 0 12px}.match{padding:12px;border:1px solid var(--line);border-radius:10px;margin:9px 0;overflow-wrap:anywhere}.match code{color:var(--good)}.empty{color:var(--muted)}.error{color:var(--bad)}@media(max-width:650px){.fields{grid-template-columns:1fr}.wrap{padding:25px 14px 45px}}
+</style>
+</head>
+<body><main class="wrap">
+<div class="eyebrow">JavaScript · Regular expressions</div><h1>Regex Playground</h1><p class="lead">Test a regular expression against sample text. See every match, its position and any capture groups. Your text stays in this browser.</p>
+<section class="panel">
+<div class="fields"><div><label for="pattern">Regular expression (without slashes)</label><input id="pattern" value="\b[A-Z][a-z]+\b" spellcheck="false"></div><div><label for="flags">Flags</label><input id="flags" value="gi" spellcheck="false" aria-describedby="flag-help"><small id="flag-help" class="summary">Common flags: g global, i ignore case, m multiline, s dotAll</small></div></div>
+<label for="sample" style="margin-top:16px">Test text</label><textarea id="sample" spellcheck="false">Ganesh is learning JavaScript. Regex can find JavaScript words, numbers like 2026, and repeated patterns. Try changing the expression!</textarea>
+<div class="actions"><button id="run">Run expression</button><button id="example" class="secondary">Load email example</button><button id="clear" class="secondary">Clear text</button></div>
+</section>
+<section class="panel" aria-live="polite"><h2 style="margin-top:0">Results</h2><p id="summary" class="summary">Run the expression to see matches.</p><div id="results" class="empty">No results yet.</div></section>
+<p class="summary">Tip: escape special characters when you want to match them literally. Invalid expressions are reported instead of crashing the page.</p>
+</main>
+<script>
+const patternEl=document.getElementById('pattern'),flagsEl=document.getElementById('flags'),sampleEl=document.getElementById('sample'),summaryEl=document.getElementById('summary'),resultsEl=document.getElementById('results');
+function run(){resultsEl.replaceChildren();try{const flags=Array.from(new Set((flagsEl.value+'g').replace(/y/g,'').split(''))).join('');const re=new RegExp(patternEl.value,flags);let match,total=0;while((match=re.exec(sampleEl.value))!==null){total++;const item=document.createElement('div');item.className='match';const head=document.createElement('strong');head.textContent='Match '+total+' · index '+match.index;const value=document.createElement('p');value.style.margin='6px 0';const code=document.createElement('code');code.textContent=match[0]||'(empty match)';value.append(code);item.append(head,value);if(match.length>1){const groups=document.createElement('small');groups.textContent='Capture groups: '+match.slice(1).map((v,i)=>'$'+(i+1)+' = '+JSON.stringify(v)).join(' · ');item.append(groups)}resultsEl.append(item);if(match[0]==='' )re.lastIndex++}summaryEl.textContent=total+' match'+(total===1?'':'es')+' found.';if(!total){resultsEl.className='empty';resultsEl.textContent='No matches. Try another pattern or sample.'}else resultsEl.className=''}catch(err){summaryEl.textContent='The expression could not be run.';resultsEl.className='error';resultsEl.textContent=err.message}}
+document.getElementById('run').addEventListener('click',run);
+document.getElementById('example').addEventListener('click',()=>{patternEl.value='[\\w.+-]+@[\\w.-]+\\.[A-Za-z]{2,}';flagsEl.value='gi';sampleEl.value='Contact hello@example.com or support.team@demo.org for help.';run()});
+document.getElementById('clear').addEventListener('click',()=>{sampleEl.value='';resultsEl.textContent='Text cleared.';summaryEl.textContent='0 matches.'});
+run();
+</script></body></html>

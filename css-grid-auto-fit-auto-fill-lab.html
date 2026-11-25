@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Grid Auto-fit vs Auto-fill Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,1040px);margin:36px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:20px;margin:18px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px}.field{display:grid;gap:7px}.field label{font-weight:650}.field input{width:100%;accent-color:#4f46e5}.field select{padding:9px;border:1px solid #cbd5e1;border-radius:8px;font:inherit}.preview-wrap{overflow-x:auto;padding:12px 0}.grid{--repeat:auto-fit;--min:190px;display:grid;grid-template-columns:repeat(var(--repeat),minmax(min(100%,var(--min)),1fr));gap:12px;min-width:280px;padding:12px;border:2px dashed #a5b4fc;border-radius:12px;background:#f8faff}.card{min-height:100px;border-radius:10px;background:#e0e7ff;border:1px solid #c7d2fe;padding:14px;display:grid;align-content:center}.card strong{font-size:1.1rem}.metric{font:700 1.1rem ui-monospace,monospace}.explain{background:#f8fafc;padding:12px 14px;border-radius:10px;color:#475569}.code{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#dbeafe;padding:14px;border-radius:10px;font-size:.9rem}button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:white;font:inherit;font-weight:650;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>CSS Grid: auto-fit vs auto-fill</h1>
+<p class="muted">Both keywords create as many columns as fit. The key difference appears when there are fewer cards than available columns: auto-fill keeps empty tracks, while auto-fit collapses them so existing cards can grow.</p>
+<section class="panel">
+<div class="controls">
+<div class="field"><label for="mode">Repeat mode</label><select id="mode"><option value="auto-fit">auto-fit</option><option value="auto-fill">auto-fill</option></select></div>
+<div class="field"><label for="count">Number of cards: <output id="countValue">3</output></label><input id="count" type="range" min="1" max="10" value="3"></div>
+<div class="field"><label for="minimum">Minimum card width: <output id="minimumValue">190px</output></label><input id="minimum" type="range" min="120" max="280" step="10" value="190"></div>
+<div class="field"><label for="width">Grid width: <output id="widthValue">900px</output></label><input id="width" type="range" min="320" max="1000" step="20" value="900"></div>
+</div>
+<div class="preview-wrap"><div class="grid" id="grid" aria-label="CSS Grid preview"><article class="card"><strong>Card 1</strong><span>Grid item</span></article><article class="card"><strong>Card 2</strong><span>Grid item</span></article><article class="card"><strong>Card 3</strong><span>Grid item</span></article></div></div>
+<p class="metric" id="tracks" aria-live="polite">Detected tracks: —</p>
+<p class="explain" id="explain">Choose auto-fill or auto-fit and keep the number of cards low to compare empty tracks.</p>
+</section>
+<section class="panel">
+<h2>CSS being used</h2>
+<pre class="code" id="code"></pre>
+</section>
+</main>
+<script>
+const grid=document.querySelector("#grid"),mode=document.querySelector("#mode"),count=document.querySelector("#count"),minimum=document.querySelector("#minimum"),width=document.querySelector("#width"),tracks=document.querySelector("#tracks");
+function update(){const n=Number(count.value),min=Number(minimum.value),w=Number(width.value);grid.style.setProperty("--repeat",mode.value);grid.style.setProperty("--min",min+"px");grid.style.width=w+"px";grid.replaceChildren();for(let i=1;i<=n;i++){const card=document.createElement("article");card.className="card";const title=document.createElement("strong");title.textContent="Card "+i;const detail=document.createElement("span");detail.textContent="Grid item";card.append(title,detail);grid.append(card)}document.querySelector("#countValue").textContent=n;document.querySelector("#minimumValue").textContent=min+"px";document.querySelector("#widthValue").textContent=w+"px";requestAnimationFrame(()=>{const columns=getComputedStyle(grid).gridTemplateColumns.trim().split(/\s+/).filter(Boolean);tracks.textContent="Detected tracks: "+columns.length+" · "+columns.join(" / ");document.querySelector("#explain").textContent=mode.value==="auto-fill"?"auto-fill preserves the empty tracks. With only a few cards, the remaining column spaces stay reserved.":"auto-fit collapses empty tracks. With only a few cards, the visible cards expand to use the available space."});document.querySelector("#code").textContent=".grid {\n  display: grid;\n  grid-template-columns: repeat("+mode.value+", minmax(min(100%, "+min+"px), 1fr));\n  gap: 12px;\n}"}
+[mode,count,minimum,width].forEach(control=>control.addEventListener("input",update));
+update();
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Mask Image Playground</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#182238;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,980px);margin:36px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:20px;margin:18px 0}.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,1fr);gap:22px}.fields{display:grid;gap:14px;align-content:start}.field{display:grid;gap:6px}.field label{font-weight:650}.field select,.field input{width:100%;font:inherit}.field select{padding:10px;border:1px solid #cbd5e1;border-radius:9px}.field input{accent-color:#4f46e5}.preview{min-height:270px;border:1px dashed #cbd5e1;border-radius:12px;padding:12px;background:repeating-conic-gradient(#eef2f7 0% 25%,#fff 0% 50%) 0/22px 22px;display:grid;place-items:center}.art{width:100%;height:245px;border-radius:8px;background:linear-gradient(135deg,#4f46e5,#06b6d4 48%,#f97316);display:grid;place-items:center;color:#fff;text-align:center;text-shadow:0 2px 8px #0008;mask-image:linear-gradient(90deg,transparent,#000 20% 80%,transparent);-webkit-mask-image:linear-gradient(90deg,transparent,#000 20% 80%,transparent)}.art strong{font-size:clamp(1.5rem,4vw,2.4rem)}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#dbeafe;padding:14px;border-radius:10px;font-size:.88rem}.actions{display:flex;justify-content:flex-end;gap:10px}button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:white;font:inherit;font-weight:650;cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}@media(max-width:700px){.layout{grid-template-columns:1fr}main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>CSS Mask Image Playground</h1>
+<p class="muted">A CSS mask controls which parts of an element are visible. Black parts of the mask reveal the element; transparent parts hide it.</p>
+<section class="panel">
+<div class="layout">
+<div class="fields">
+<div class="field"><label for="shape">Mask pattern</label><select id="shape"><option value="fade">Soft horizontal fade</option><option value="radial">Radial spotlight</option><option value="stripes">Vertical stripes</option><option value="diagonal">Diagonal reveal</option></select></div>
+<div class="field"><label for="strength">Mask size / spread <output id="strengthValue">70%</output></label><input id="strength" type="range" min="25" max="100" value="70"></div>
+<div class="field"><label for="angle">Gradient angle <output id="angleValue">90°</output></label><input id="angle" type="range" min="0" max="180" value="90"></div>
+<p class="muted" id="support" role="status">Checking CSS mask support…</p>
+</div>
+<div class="preview"><div class="art" id="art"><strong>Masked CSS</strong></div></div>
+</div>
+</section>
+<section class="panel">
+<div class="actions"><button id="copy" type="button">Copy CSS</button></div>
+<h2>Generated CSS</h2>
+<pre id="code" aria-live="polite"></pre>
+</section>
+</main>
+<script>
+const shape=document.querySelector("#shape"),strength=document.querySelector("#strength"),angle=document.querySelector("#angle"),art=document.querySelector("#art"),code=document.querySelector("#code");
+function update(){const spread=Number(strength.value),deg=Number(angle.value);document.querySelector("#strengthValue").textContent=spread+"%";document.querySelector("#angleValue").textContent=deg+"°";let mask;
+if(shape.value==="fade")mask="linear-gradient("+deg+"deg, transparent 0%, #000 "+(100-spread)/2+"%, #000 "+(100+spread)/2+"%, transparent 100%)";
+if(shape.value==="radial")mask="radial-gradient(circle, #000 0 "+spread+"%, transparent "+Math.min(100,spread+20)+"%)";
+if(shape.value==="stripes")mask="repeating-linear-gradient("+deg+"deg, #000 0 14px, transparent 14px 25px)";
+if(shape.value==="diagonal")mask="linear-gradient("+deg+"deg, #000 0 "+spread+"%, transparent "+spread+"% 100%)";
+art.style.maskImage=mask;art.style.webkitMaskImage=mask;code.textContent=".masked-element {\n  -webkit-mask-image: "+mask+";\n  mask-image: "+mask+";\n  -webkit-mask-repeat: no-repeat;\n  mask-repeat: no-repeat;\n}";
+}
+[shape,strength,angle].forEach(control=>control.addEventListener("input",update));
+document.querySelector("#copy").addEventListener("click",async()=>{try{await navigator.clipboard.writeText(code.textContent);document.querySelector("#copy").textContent="Copied!"}catch{document.querySelector("#copy").textContent="Select CSS to copy"}});
+document.querySelector("#support").textContent=("maskImage" in art.style||"webkitMaskImage" in art.style)?"Your browser supports CSS masks.":"CSS masks may not be supported in this browser.";
+update();
+</script>
+</body>
+</html>

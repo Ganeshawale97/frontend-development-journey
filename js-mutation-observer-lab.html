@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mutation Observer Playground</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,960px);margin:36px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:20px;margin:18px 0}.actions{display:flex;flex-wrap:wrap;gap:10px}.actions button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:white;font:inherit;font-weight:650;cursor:pointer}.actions button.secondary{background:#e2e8f0;color:#182238}.actions button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.target{margin-top:16px;padding:16px;border:2px dashed #a5b4fc;border-radius:12px;background:#f8faff}.target ul{padding-left:24px}.target li{padding:6px 8px;margin:6px 0;border-radius:7px;background:#e0e7ff}.target[data-status="highlighted"]{border-color:#16a34a;background:#f0fdf4}.status{font-weight:700}.log{height:220px;overflow:auto;background:#0f172a;color:#dbeafe;border-radius:10px;padding:12px;font: .85rem/1.6 ui-monospace,monospace}.log p{margin:0 0 5px}.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;color:#64748b}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>MutationObserver Playground</h1>
+<p class="muted">A MutationObserver watches a DOM node and reports changes without attaching an event listener to every child.</p>
+<section class="panel">
+<div class="actions">
+<button id="add">Add list item</button>
+<button id="edit" class="secondary">Edit first item</button>
+<button id="toggle" class="secondary">Toggle target attribute</button>
+<button id="start">Start observing</button>
+<button id="stop" class="secondary">Stop observing</button>
+</div>
+<div class="target" id="target" data-status="normal">
+<strong>Observed element</strong>
+<p>This box is the observer target. Use the buttons above to change its descendants and attributes.</p>
+<ul id="items"><li>First sample item</li><li>Second sample item</li></ul>
+</div>
+<p class="status" id="status" role="status">Observer is active.</p>
+</section>
+<section class="panel">
+<div class="actions" style="justify-content:space-between;align-items:center"><h2 style="margin:0">Mutation log</h2><button id="clear" class="secondary">Clear log</button></div>
+<div id="log" class="log" aria-live="polite"><p>Ready. Try adding or editing an item.</p></div>
+<div class="legend"><span>childList: nodes added/removed</span><span>attributes: attribute changed</span><span>characterData: text node changed</span></div>
+</section>
+</main>
+<script>
+const target=document.querySelector("#target"),items=document.querySelector("#items"),log=document.querySelector("#log"),status=document.querySelector("#status");
+let observer,number=2;
+function record(message){const line=document.createElement("p");line.textContent=new Date().toLocaleTimeString()+"  "+message;log.prepend(line);while(log.children.length>40)log.lastElementChild.remove()}
+function start(){if(observer)observer.disconnect();observer=new MutationObserver(records=>records.forEach(record=>{let detail=record.type;if(record.type==="childList")detail+=" · added "+record.addedNodes.length+", removed "+record.removedNodes.length;if(record.type==="attributes")detail+=" · "+record.attributeName+" changed";if(record.type==="characterData")detail+=" · text changed";record(detail)}));observer.observe(target,{subtree:true,childList:true,attributes:true,characterData:true,attributeOldValue:true,characterDataOldValue:true});status.textContent="Observer is active.";record("Observing target subtree")}
+function stop(){if(observer)observer.disconnect();status.textContent="Observer is paused.";record("Observer disconnected")}
+document.querySelector("#add").addEventListener("click",()=>{const li=document.createElement("li");li.textContent="New sample item "+(++number);items.append(li)});
+document.querySelector("#edit").addEventListener("click",()=>{const first=items.firstElementChild;if(first)first.firstChild.textContent="Edited at "+new Date().toLocaleTimeString()});
+document.querySelector("#toggle").addEventListener("click",()=>target.dataset.status=target.dataset.status==="highlighted"?"normal":"highlighted");
+document.querySelector("#start").addEventListener("click",start);
+document.querySelector("#stop").addEventListener("click",stop);
+document.querySelector("#clear").addEventListener("click",()=>{log.replaceChildren();record("Log cleared")});
+start();
+</script>
+</body>
+</html>

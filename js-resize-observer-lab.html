@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resize Observer Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,940px);margin:36px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:20px;margin:18px 0}.controls{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.controls label{font-weight:650}.controls input{flex:1 1 220px;accent-color:#4f46e5}.stage-wrap{overflow-x:auto;padding:12px 0}.stage{width:760px;max-width:100%;min-width:240px;resize:horizontal;overflow:auto;border:2px dashed #a5b4fc;border-radius:12px;padding:14px;background:#f8faff}.component{display:flex;align-items:center;gap:14px;padding:18px;border-radius:10px;background:#e0e7ff;transition:background .2s}.component.compact{display:block;background:#fef3c7}.component strong{font-size:1.1rem}.component p{margin:5px 0 0}.metric{font:700 1.3rem ui-monospace,monospace}.log{max-height:150px;overflow:auto;font:.85rem ui-monospace,monospace;color:#334155}.log p{padding:6px;margin:4px 0;background:#f8fafc;border-radius:6px}button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}button:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>ResizeObserver Lab</h1>
+<p class="muted">Resize the preview with the slider or drag its lower-right edge. ResizeObserver reports the element's content box size, so components can respond to their own container instead of the whole window.</p>
+<section class="panel">
+<div class="controls"><label for="width">Preview width</label><input id="width" type="range" min="240" max="760" value="620"><output id="widthValue" class="metric" for="width">620px</output></div>
+<div class="stage-wrap"><div class="stage" id="stage">
+<div class="component" id="component"><strong>Adaptive card</strong><p>When this container becomes narrow, the card changes to a stacked layout.</p></div>
+</div></div>
+<p>Observed content width: <strong id="measured" class="metric">—</strong> <span id="layoutLabel">Waiting for measurement</span></p>
+</section>
+<section class="panel">
+<h2>Resize events</h2>
+<div id="log" class="log" aria-live="polite"><p>Waiting for ResizeObserver…</p></div>
+</section>
+</main>
+<script>
+const stage=document.querySelector("#stage"),slider=document.querySelector("#width"),value=document.querySelector("#widthValue"),measured=document.querySelector("#measured"),component=document.querySelector("#component"),layoutLabel=document.querySelector("#layoutLabel"),log=document.querySelector("#log");
+function addLog(width,mode){const row=document.createElement("p");row.textContent=new Date().toLocaleTimeString()+" · "+width.toFixed(1)+"px · "+mode+" layout";log.prepend(row);while(log.children.length>20)log.lastElementChild.remove()}
+slider.addEventListener("input",()=>{stage.style.width=slider.value+"px";value.value=slider.value+"px";value.textContent=slider.value+"px"});
+if("ResizeObserver" in window){const observer=new ResizeObserver(entries=>{const width=entries[0].contentRect.width;const compact=width<430;component.classList.toggle("compact",compact);measured.textContent=Math.round(width)+"px";layoutLabel.textContent=compact?"· compact mode":"· wide mode";addLog(width,compact?"compact":"wide")});observer.observe(stage)}else{layoutLabel.textContent="ResizeObserver is not supported in this browser."}
+</script>
+</body>
+</html>

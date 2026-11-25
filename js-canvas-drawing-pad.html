@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Canvas Drawing Pad</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#182238;font:16px/1.5 system-ui,sans-serif}main{width:min(100% - 32px,980px);margin:34px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:18px;margin:18px 0}.toolbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap}.toolbar label{display:flex;align-items:center;gap:8px;font-weight:650}.toolbar input[type=range]{width:130px}.toolbar input[type=color]{width:42px;height:38px;border:0;padding:2px;background:transparent}.toolbar button{border:0;border-radius:9px;padding:10px 13px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}.toolbar button.secondary{background:#e2e8f0;color:#182238}button:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.canvas-wrap{margin-top:14px;border:2px dashed #a5b4fc;border-radius:12px;overflow:hidden;background:white}canvas{display:block;width:100%;height:340px;touch-action:none;cursor:crosshair}.hint{font-size:.9rem;color:#64748b;margin-bottom:0}@media(max-width:560px){main{margin:20px auto}.panel{padding:14px}canvas{height:280px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Canvas Drawing Pad</h1>
+<p class="muted">Practice the Canvas 2D API with pointer events. Draw with a mouse, stylus, or finger, then undo strokes or export your sketch as a PNG.</p>
+<section class="panel">
+<div class="toolbar">
+<label for="color">Brush color <input id="color" type="color" value="#4f46e5"></label>
+<label for="size">Brush size <input id="size" type="range" min="1" max="28" value="6"><output id="sizeValue">6px</output></label>
+<button id="undo" class="secondary" type="button">Undo</button>
+<button id="clear" class="secondary" type="button">Clear</button>
+<button id="download" type="button">Download PNG</button>
+</div>
+<div class="canvas-wrap"><canvas id="canvas" aria-label="Drawing surface. Use a mouse, stylus, or touch to draw." role="img"></canvas></div>
+<p class="hint" id="hint" aria-live="polite">Your strokes stay in this page until you clear or reload it.</p>
+</section>
+</main>
+<script>
+const canvas=document.querySelector("#canvas"),ctx=canvas.getContext("2d"),color=document.querySelector("#color"),size=document.querySelector("#size"),sizeValue=document.querySelector("#sizeValue"),undo=document.querySelector("#undo");
+let strokes=[],active=null,dpr=1;
+function draw(){const rect=canvas.getBoundingClientRect();ctx.clearRect(0,0,rect.width,rect.height);ctx.fillStyle="#fff";ctx.fillRect(0,0,rect.width,rect.height);for(const stroke of strokes){if(!stroke.points.length)continue;ctx.beginPath();ctx.strokeStyle=stroke.color;ctx.lineWidth=stroke.size;ctx.lineCap="round";ctx.lineJoin="round";ctx.moveTo(stroke.points[0].x,stroke.points[0].y);for(const point of stroke.points.slice(1))ctx.lineTo(point.x,point.y);if(stroke.points.length===1){ctx.lineTo(stroke.points[0].x+.01,stroke.points[0].y+.01)}ctx.stroke()}undo.disabled=strokes.length===0}
+function resize(){const rect=canvas.getBoundingClientRect();dpr=Math.max(1,window.devicePixelRatio||1);canvas.width=Math.round(rect.width*dpr);canvas.height=Math.round(rect.height*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);draw()}
+function point(event){const rect=canvas.getBoundingClientRect();return{x:event.clientX-rect.left,y:event.clientY-rect.top}}
+canvas.addEventListener("pointerdown",event=>{canvas.setPointerCapture(event.pointerId);active={color:color.value,size:Number(size.value),points:[point(event)]};strokes.push(active);draw()});
+canvas.addEventListener("pointermove",event=>{if(!active)return;active.points.push(point(event));draw()});
+function finish(){active=null}canvas.addEventListener("pointerup",finish);canvas.addEventListener("pointercancel",finish);
+size.addEventListener("input",()=>sizeValue.textContent=size.value+"px");
+undo.addEventListener("click",()=>{strokes.pop();draw()});
+document.querySelector("#clear").addEventListener("click",()=>{strokes=[];draw();document.querySelector("#hint").textContent="Canvas cleared."});
+document.querySelector("#download").addEventListener("click",()=>{const link=document.createElement("a");link.download="my-canvas-sketch.png";link.href=canvas.toDataURL("image/png");link.click();document.querySelector("#hint").textContent="PNG export created."});
+if("ResizeObserver" in window)new ResizeObserver(resize).observe(canvas);else window.addEventListener("resize",resize);
+resize();
+</script>
+</body>
+</html>

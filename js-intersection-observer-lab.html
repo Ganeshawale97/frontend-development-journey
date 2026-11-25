@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Intersection Observer Lab</title>
+<style>
+:root{color-scheme:light;--ink:#182238;--muted:#64748b;--line:#dbe3ef;--accent:#4f46e5;--surface:#fff;--soft:#f4f6fb}
+*{box-sizing:border-box}body{margin:0;background:var(--soft);color:var(--ink);font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,1000px);margin:36px auto}h1{margin:0 0 8px;font-size:clamp(1.8rem,4vw,2.5rem)}p{color:var(--muted)}.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin:18px 0;box-shadow:0 8px 24px #1822380a}.controls{display:flex;flex-wrap:wrap;gap:14px;align-items:end}.field{display:grid;gap:6px;flex:1 1 180px}label{font-weight:650}input,select,button{font:inherit;border:1px solid var(--line);border-radius:9px;padding:10px;background:#fff;color:var(--ink)}button{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:650;cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.scrollport{height:390px;overflow:auto;border:2px dashed #a5b4fc;border-radius:12px;padding:16px;background:#f8faff}.spacer{height:180px;display:grid;place-items:center;color:var(--muted);font-size:.9rem}.tile{min-height:110px;margin:14px 0;padding:18px;border-radius:12px;background:#e0e7ff;border:1px solid #c7d2fe;opacity:.45;transform:translateY(14px);transition:opacity .35s,transform .35s}.tile.is-visible{opacity:1;transform:none;background:#dcfce7;border-color:#86efac}.tile strong{display:block;font-size:1.1rem}.log{max-height:180px;overflow:auto;display:grid;gap:6px;font: .85rem ui-monospace,monospace}.log p{margin:0;padding:7px 9px;background:#f8fafc;border-radius:7px;color:#334155}.hint{font-size:.9rem;margin:8px 0 0}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Intersection Observer Lab</h1>
+<p>Scroll the preview and watch the browser report when each card enters or leaves the scroll area. Change the observer settings and apply them to see the difference.</p>
+<section class="panel" aria-labelledby="settings-title">
+<h2 id="settings-title">Observer settings</h2>
+<div class="controls">
+<div class="field"><label for="margin">Root margin</label><input id="margin" value="0px" placeholder="e.g. 40px 0px"></div>
+<div class="field"><label for="threshold">Visibility threshold</label><select id="threshold"><option value="0">0 — any intersection</option><option value=".25">0.25 — one quarter</option><option value=".5" selected>0.5 — half visible</option><option value="1">1 — fully visible</option></select></div>
+<button id="apply" type="button">Apply settings</button>
+</div>
+<p class="hint">The scroll box is the observer root. A positive root margin expands its effective viewing area.</p>
+</section>
+<section class="panel">
+<h2>Scroll preview</h2>
+<div class="scrollport" id="scrollport" tabindex="0" aria-label="Scrollable Intersection Observer preview">
+<div class="spacer">Scroll down to reveal the cards ↓</div>
+<div id="cards">
+<article class="tile"><strong>Card 1</strong>Lazy-loaded images can begin loading before they enter the viewport.</article>
+<article class="tile"><strong>Card 2</strong>Reveal animations can respond to actual visibility.</article>
+<article class="tile"><strong>Card 3</strong>Analytics can record which sections were viewed.</article>
+<article class="tile"><strong>Card 4</strong>Infinite scrolling can request the next page near the bottom.</article>
+<article class="tile"><strong>Card 5</strong>Intersection Observer avoids repeated scroll calculations.</article>
+</div>
+<div class="spacer">End of preview ↑</div>
+</div>
+</section>
+<section class="panel">
+<div class="controls"><h2 style="margin:0;flex:1">Observer log</h2><button id="clear" type="button">Clear log</button></div>
+<div id="log" class="log" aria-live="polite"><p>Waiting for the first intersection event…</p></div>
+</section>
+</main>
+<script>
+const root=document.querySelector("#scrollport"), log=document.querySelector("#log"), margin=document.querySelector("#margin"), threshold=document.querySelector("#threshold");
+let observer;
+function write(message){const row=document.createElement("p");row.textContent=new Date().toLocaleTimeString()+" — "+message;log.prepend(row);while(log.children.length>30)log.lastElementChild.remove()}
+function observe(){if(observer)observer.disconnect();document.querySelectorAll(".tile").forEach(card=>card.classList.remove("is-visible"));try{observer=new IntersectionObserver(entries=>entries.forEach(entry=>{entry.target.classList.toggle("is-visible",entry.isIntersecting);write(entry.target.querySelector("strong").textContent+": "+(entry.isIntersecting?"intersecting":"outside")+" · "+Math.round(entry.intersectionRatio*100)+"% visible")}),{root,rootMargin:margin.value.trim()||"0px",threshold:Number(threshold.value)});document.querySelectorAll(".tile").forEach(card=>observer.observe(card));write("Observer attached · rootMargin "+(margin.value.trim()||"0px")+", threshold "+threshold.value)}catch(error){write("Invalid settings: "+error.message)}}
+document.querySelector("#apply").addEventListener("click",()=>{root.scrollTop=0;observe()});
+document.querySelector("#clear").addEventListener("click",()=>{log.replaceChildren();write("Log cleared")});
+observe();
+</script>
+</body>
+</html>

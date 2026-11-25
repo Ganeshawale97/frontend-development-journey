@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Form Dirty State Tracker</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#182238;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,760px);margin:36px auto}h1{font-size:clamp(1.8rem,4vw,2.4rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:22px;margin:18px 0}.field{display:grid;gap:6px;margin:14px 0}.field label{font-weight:650}.field input,.field select{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}.field input:focus-visible,.field select:focus-visible,button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.check{display:flex;gap:10px;align-items:center;margin:14px 0}.check input{width:18px;height:18px}.status{padding:12px 14px;border-radius:10px;background:#dcfce7;color:#166534;font-weight:700}.status.dirty{background:#fef3c7;color:#92400e}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}button{border:0;border-radius:9px;padding:10px 15px;background:#4f46e5;color:white;font:inherit;font-weight:650;cursor:pointer}button.secondary{background:#e2e8f0;color:#182238}button:disabled{opacity:.45;cursor:not-allowed}.help{font-size:.9rem;color:#64748b}
+</style>
+</head>
+<body>
+<main>
+<h1>Form Dirty State Tracker</h1>
+<p class="muted">Many apps warn users before they leave a page with unsaved edits. This demo compares the current form values with the last saved snapshot.</p>
+<section class="panel">
+<div id="status" class="status" role="status" aria-live="polite">All changes saved.</div>
+<form id="profile">
+<div class="field"><label for="name">Display name</label><input id="name" name="name" value="Alex Morgan" required></div>
+<div class="field"><label for="email">Email address</label><input id="email" name="email" type="email" value="alex@example.com" required></div>
+<div class="field"><label for="role">Role</label><select id="role" name="role"><option>Frontend learner</option><option>Designer</option><option>Developer</option><option>Student</option></select></div>
+<label class="check"><input type="checkbox" name="updates" checked> Send me learning updates</label>
+<p class="help">Try changing a value, then save or restore the last saved version. Refreshing or closing the page while dirty may trigger a browser warning.</p>
+<div class="actions"><button id="save" type="submit" disabled>Save changes</button><button id="reset" class="secondary" type="button">Restore saved values</button></div>
+</form>
+</section>
+<section class="panel">
+<h2>Current snapshot</h2>
+<pre id="snapshot" style="white-space:pre-wrap;overflow-wrap:anywhere;background:#f8fafc;padding:14px;border-radius:9px">{}</pre>
+</section>
+</main>
+<script>
+const form=document.querySelector("#profile"),statusBox=document.querySelector("#status"),saveButton=document.querySelector("#save"),snapshot=document.querySelector("#snapshot");
+function readValues(){return Object.fromEntries(new FormData(form).entries())}
+let saved=readValues();
+function refresh(){const current=readValues();const dirty=Object.keys(saved).some(key=>String(saved[key]??"")!==String(current[key]??""));statusBox.textContent=dirty?"You have unsaved changes.":"All changes saved.";statusBox.classList.toggle("dirty",dirty);saveButton.disabled=!dirty;snapshot.textContent=JSON.stringify(current,null,2);window.onbeforeunload=dirty?event=>{event.preventDefault();event.returnValue=""}:null}
+form.addEventListener("input",refresh);form.addEventListener("change",refresh);
+form.addEventListener("submit",event=>{event.preventDefault();if(!form.reportValidity())return;saved=readValues();refresh();statusBox.textContent="Changes saved in this demo."});
+document.querySelector("#reset").addEventListener("click",()=>{for(const [key,value] of Object.entries(saved)){const field=form.elements.namedItem(key);if(!field)continue;if(field.type==="checkbox")field.checked=Boolean(value);else field.value=value}refresh()});
+refresh();
+</script>
+</body>
+</html>

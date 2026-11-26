@@ -35,7 +35,7 @@ const direction=document.getElementById('direction'),writing=document.getElement
 function update(){
  demo.style.direction=direction.value;demo.style.writingMode=writing.value;demo.style.setProperty('--inline',inline.value+'px');demo.style.setProperty('--block',block.value+'px');
  document.getElementById('inlineValue').textContent=inline.value+' px';document.getElementById('blockValue').textContent=block.value+' px';
- code.textContent='.card {\\n  direction: '+direction.value+';\\n  writing-mode: '+writing.value+';\\n  padding-inline: '+inline.value+'px;\\n  padding-block: '+block.value+'px;\\n  margin-inline-start: 12px;\\n  border-inline-start: 7px solid #4f46e5;\\n  border-block-end: 4px solid #06b6d4;\\n}';
+ code.textContent='.card {\n  direction: '+direction.value+';\n  writing-mode: '+writing.value+';\n  padding-inline: '+inline.value+'px;\n  padding-block: '+block.value+'px;\n  margin-inline-start: 12px;\n  border-inline-start: 7px solid #4f46e5;\n  border-block-end: 4px solid #06b6d4;\n}';
 }
 [direction,writing,inline,block].forEach(control=>control.addEventListener('input',update));update();
 </script>

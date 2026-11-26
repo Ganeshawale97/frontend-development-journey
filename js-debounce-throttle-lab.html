@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debounce vs Throttle Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,980px);margin:36px auto}h1{font-size:clamp(1.9rem,4vw,2.6rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:16px;padding:20px;margin:18px 0;box-shadow:0 8px 24px #17203308}.controls{display:flex;gap:14px;align-items:end;flex-wrap:wrap}.field{display:grid;gap:6px;flex:1 1 220px}.field label{font-weight:650}.field input{width:100%;font:inherit;padding:11px;border:1px solid #cbd5e1;border-radius:9px}.field input[type=range]{padding:0;accent-color:#4f46e5}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:9px;padding:10px 15px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}button.secondary{background:#e2e8f0;color:#172033}button:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}.metric{padding:16px;border-radius:12px;background:#f8fafc;border:1px solid #e2e8f0}.metric h2{font-size:1.05rem;margin:0 0 5px}.count{font:700 2rem ui-monospace,monospace}.value{overflow-wrap:anywhere;color:#475569;min-height:26px}.hint{font-size:.9rem;color:#64748b}.status{min-height:1.5em;color:#4338ca;font-weight:650}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Debounce vs Throttle</h1>
+<p class="muted">Type in the box and compare how often each timing technique runs. The raw counter records every input event; the other counters show the callbacks that actually execute.</p>
+<section class="panel">
+<div class="controls">
+<div class="field"><label for="searchInput">Try typing here</label><input id="searchInput" type="search" placeholder="Search a fruit or type anything..." autocomplete="off"></div>
+<div class="field"><label for="delay">Delay: <output id="delayValue">400 ms</output></label><input id="delay" type="range" min="100" max="1200" step="50" value="400"></div>
+</div>
+<div class="actions" style="margin-top:14px"><button id="reset" class="secondary" type="button">Reset counters</button></div>
+<p id="status" class="status" role="status" aria-live="polite">Start typing to see the difference.</p>
+</section>
+<section class="metrics" aria-label="Event counters">
+<article class="metric"><h2>Raw input events</h2><div class="count" id="rawCount">0</div><p class="hint">Runs immediately for every keystroke.</p></article>
+<article class="metric"><h2>Debounced callbacks</h2><div class="count" id="debounceCount">0</div><p class="value" id="debounceValue">Waiting for input…</p><p class="hint">Runs after typing pauses.</p></article>
+<article class="metric"><h2>Throttled callbacks</h2><div class="count" id="throttleCount">0</div><p class="value" id="throttleValue">Waiting for input…</p><p class="hint">Runs at most once per delay window, with a trailing update.</p></article>
+</section>
+<section class="panel">
+<h2>What to notice</h2>
+<ul>
+<li><strong>Debounce</strong> waits until no new event arrives for the selected delay. It is useful for search suggestions and autosave.</li>
+<li><strong>Throttle</strong> limits how frequently a callback runs during a stream of events. It is useful for scroll and resize work.</li>
+<li>Try a short delay, then a longer one. Pause between words to see the debounced callback fire.</li>
+</ul>
+</section>
+</main>
+<script>
+const input=document.querySelector('#searchInput');
+const delayInput=document.querySelector('#delay');
+const delayValue=document.querySelector('#delayValue');
+const rawCount=document.querySelector('#rawCount');
+const debounceCount=document.querySelector('#debounceCount');
+const throttleCount=document.querySelector('#throttleCount');
+const debounceValue=document.querySelector('#debounceValue');
+const throttleValue=document.querySelector('#throttleValue');
+const status=document.querySelector('#status');
+let raw=0,debounced=0,throttled=0,debounceTimer=null,throttleTimer=null,lastThrottle=0,pendingValue='';
+function render(){rawCount.textContent=raw;debounceCount.textContent=debounced;throttleCount.textContent=throttled}
+function runDebounced(value){debounced++;debounceValue.textContent=value||'(empty value)';render()}
+function runThrottled(value){throttled++;throttleValue.textContent=value||'(empty value)';render()}
+function onInput(){
+ const value=input.value;const wait=Number(delayInput.value);raw++;pendingValue=value;render();
+ clearTimeout(debounceTimer);debounceTimer=setTimeout(()=>runDebounced(value),wait);
+ const now=Date.now();const remaining=wait-(now-lastThrottle);
+ if(remaining<=0){clearTimeout(throttleTimer);throttleTimer=null;lastThrottle=now;runThrottled(value)}
+ else{clearTimeout(throttleTimer);throttleTimer=setTimeout(()=>{lastThrottle=Date.now();runThrottled(pendingValue);throttleTimer=null},remaining)}
+ status.textContent='Input received. Debounce is waiting; throttle is rate-limiting updates.';
+}
+input.addEventListener('input',onInput);
+delayInput.addEventListener('input',()=>{delayValue.textContent=delayInput.value+' ms'});
+document.querySelector('#reset').addEventListener('click',()=>{
+ clearTimeout(debounceTimer);clearTimeout(throttleTimer);debounceTimer=throttleTimer=null;raw=debounced=throttled=0;lastThrottle=0;pendingValue='';input.value='';debounceValue.textContent=throttleValue.textContent='Waiting for input…';status.textContent='Counters reset. Start typing again.';render();input.focus();
+});
+render();
+</script>
+</body>
+</html>

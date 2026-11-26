@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Logical Properties Playground</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#172033;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,980px);margin:36px auto}h1{font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:16px;padding:20px;margin:18px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px}.field{display:grid;gap:6px}.field label{font-weight:700}.field select,.field input{width:100%;font:inherit}.field select{padding:10px;border:1px solid #cbd5e1;border-radius:9px}.field input{accent-color:#4f46e5}.preview{min-height:280px;display:grid;place-items:center;background:#f8fafc;border:2px dashed #cbd5e1;border-radius:12px;padding:16px;overflow:auto}.demo{--inline:22px;--block:18px;direction:ltr;writing-mode:horizontal-tb;padding-inline:var(--inline);padding-block:var(--block);margin-inline-start:12px;border-inline-start:7px solid #4f46e5;border-block-end:4px solid #06b6d4;background:linear-gradient(135deg,#e0e7ff,#cffafe);border-radius:10px;max-width:100%;min-width:180px;min-height:170px}.demo h2{margin-block:0 10px;font-size:1.3rem}.demo p{margin-block:0 10px}.code{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#dbeafe;padding:14px;border-radius:10px;font-size:.9rem}.note{font-size:.92rem;color:#64748b}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>CSS Logical Properties Playground</h1>
+<p class="muted">Logical properties describe spacing and borders by writing direction instead of physical left, right, top and bottom. Change the settings to see how the same CSS adapts.</p>
+<section class="panel">
+<div class="controls">
+<div class="field"><label for="direction">Text direction</label><select id="direction"><option value="ltr">Left to right (LTR)</option><option value="rtl">Right to left (RTL)</option></select></div>
+<div class="field"><label for="writing">Writing mode</label><select id="writing"><option value="horizontal-tb">Horizontal</option><option value="vertical-rl">Vertical, right to left</option><option value="vertical-lr">Vertical, left to right</option></select></div>
+<div class="field"><label for="inline">Inline padding: <output id="inlineValue">22 px</output></label><input id="inline" type="range" min="0" max="60" value="22"></div>
+<div class="field"><label for="block">Block padding: <output id="blockValue">18 px</output></label><input id="block" type="range" min="0" max="60" value="18"></div>
+</div>
+</section>
+<section class="panel">
+<h2>Live preview</h2>
+<div class="preview"><article id="demo" class="demo"><h2>Logical layout</h2><p>Inline padding follows the text direction. Block padding follows the writing flow.</p><strong>Start edge →</strong></article></div>
+<p class="note">Try RTL, then vertical writing. The border on the inline start edge moves without changing the CSS property name.</p>
+</section>
+<section class="panel">
+<h2>Generated CSS</h2>
+<pre id="code" class="code" aria-live="polite"></pre>
+</section>
+</main>
+<script>
+const direction=document.getElementById('direction'),writing=document.getElementById('writing'),inline=document.getElementById('inline'),block=document.getElementById('block'),demo=document.getElementById('demo'),code=document.getElementById('code');
+function update(){
+ demo.style.direction=direction.value;demo.style.writingMode=writing.value;demo.style.setProperty('--inline',inline.value+'px');demo.style.setProperty('--block',block.value+'px');
+ document.getElementById('inlineValue').textContent=inline.value+' px';document.getElementById('blockValue').textContent=block.value+' px';
+ code.textContent='.card {\\n  direction: '+direction.value+';\\n  writing-mode: '+writing.value+';\\n  padding-inline: '+inline.value+'px;\\n  padding-block: '+block.value+'px;\\n  margin-inline-start: 12px;\\n  border-inline-start: 7px solid #4f46e5;\\n  border-block-end: 4px solid #06b6d4;\\n}';
+}
+[direction,writing,inline,block].forEach(control=>control.addEventListener('input',update));update();
+</script>
+</body>
+</html>

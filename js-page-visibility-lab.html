@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Page Visibility API Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fb;color:#172033;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,850px);margin:36px auto}h1{font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:16px;padding:22px;margin:18px 0}.state{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:#dcfce7;color:#166534;font-weight:750}.state.hidden{background:#fef3c7;color:#92400e}.dot{width:12px;height:12px;border-radius:50%;background:currentColor}.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.stat{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:18px}.stat span{display:block;color:#64748b;font-weight:650}.stat strong{display:block;font:700 clamp(1.7rem,5vw,2.3rem) ui-monospace,monospace;margin-top:5px}.actions{display:flex;gap:10px;flex-wrap:wrap}button{border:0;border-radius:9px;padding:10px 15px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}button.secondary{background:#e2e8f0;color:#172033}button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.note{background:#eff6ff;border-left:4px solid #3b82f6;padding:12px 14px;border-radius:8px;color:#1e3a8a}@media(max-width:560px){main{margin:22px auto}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Page Visibility API Lab</h1>
+<p class="muted">See how a page can detect when its tab is visible or hidden. Start the tracker, then switch to another tab and return.</p>
+<section class="panel">
+<div id="state" class="state" role="status" aria-live="polite"><span class="dot" aria-hidden="true"></span><span id="stateText">Page is visible</span></div>
+<div class="actions" style="margin-top:16px"><button id="start" type="button">Start tracking</button><button id="pause" class="secondary" type="button" disabled>Pause</button><button id="reset" class="secondary" type="button">Reset</button></div>
+</section>
+<section class="stats" aria-label="Time statistics">
+<article class="stat"><span>Visible time</span><strong id="visibleTime">00:00.0</strong></article>
+<article class="stat"><span>Hidden time</span><strong id="hiddenTime">00:00.0</strong></article>
+<article class="stat"><span>Visibility changes</span><strong id="changes">0</strong></article>
+</section>
+<section class="panel">
+<h2>How it works</h2>
+<p>The <code>visibilitychange</code> event fires when the browser changes the document's visibility state. Apps use this to pause videos, stop unnecessary animations, or reduce background work.</p>
+<p class="note">This demo counts time only while tracking is active. Browsers may throttle timers in background tabs, so the visibility event is used to account for the transition.</p>
+</section>
+</main>
+<script>
+const state=document.querySelector('#state'),stateText=document.querySelector('#stateText');
+const visibleOut=document.querySelector('#visibleTime'),hiddenOut=document.querySelector('#hiddenTime'),changesOut=document.querySelector('#changes');
+const startButton=document.querySelector('#start'),pauseButton=document.querySelector('#pause');
+let running=false,visibleMs=0,hiddenMs=0,changes=0,lastTick=0,timer=null;
+function isVisible(){return document.visibilityState==='visible'}
+function format(ms){const tenths=Math.floor(ms/100)%10;const total=Math.floor(ms/1000);const minutes=String(Math.floor(total/60)).padStart(2,'0');const seconds=String(total%60).padStart(2,'0');return minutes+':'+seconds+'.'+tenths}
+function render(){visibleOut.textContent=format(visibleMs);hiddenOut.textContent=format(hiddenMs);changesOut.textContent=changes;const visible=isVisible();state.classList.toggle('hidden',!visible);stateText.textContent=visible?'Page is visible':'Page is hidden';}
+function accountTime(){if(!running)return;const now=performance.now();const elapsed=Math.max(0,now-lastTick);if(isVisible())visibleMs+=elapsed;else hiddenMs+=elapsed;lastTick=now;render()}
+function onVisibilityChange(){if(running){accountTime();changes++;render()}}
+function start(){if(running)return;running=true;lastTick=performance.now();startButton.disabled=true;pauseButton.disabled=false;timer=setInterval(accountTime,100);render()}
+function pause(){if(!running)return;accountTime();running=false;clearInterval(timer);timer=null;startButton.disabled=false;pauseButton.disabled=true}
+function reset(){pause();visibleMs=hiddenMs=changes=0;render()}
+startButton.addEventListener('click',start);pauseButton.addEventListener('click',pause);document.querySelector('#reset').addEventListener('click',reset);
+document.addEventListener('visibilitychange',onVisibilityChange);render();
+</script>
+</body>
+</html>

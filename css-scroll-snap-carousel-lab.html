@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CSS Scroll Snap Carousel Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,1000px);margin:36px auto}h1{font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:16px;padding:20px;margin:18px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}.field{display:grid;gap:6px}.field label{font-weight:700}.field select,.field input{width:100%;font:inherit}.field select{padding:10px;border:1px solid #cbd5e1;border-radius:9px}.field input{accent-color:#4f46e5}.track-wrap{overflow:hidden}.track{--gap:14px;--snap-align:start;display:flex;gap:var(--gap);overflow:auto;padding:12px;border:2px dashed #a5b4fc;border-radius:12px;background:#f8faff;scroll-snap-type:x mandatory;scroll-behavior:smooth}.slide{flex:0 0 78%;min-height:210px;display:grid;align-content:center;justify-items:center;text-align:center;padding:20px;border-radius:12px;background:linear-gradient(135deg,#e0e7ff,#cffafe);scroll-snap-align:start}.slide:nth-child(2n){background:linear-gradient(135deg,#fce7f3,#ffedd5)}.slide strong{font-size:1.5rem}.track.vertical{height:300px;flex-direction:column;scroll-snap-type:y mandatory}.track.vertical .slide{flex:0 0 210px;width:100%;min-height:210px}.code{white-space:pre-wrap;overflow-wrap:anywhere;background:#0f172a;color:#dbeafe;padding:14px;border-radius:10px;font-size:.9rem}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:white;font:inherit;font-weight:650;cursor:pointer}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}.slide{flex-basis:88%}}
+</style>
+</head>
+<body>
+<main>
+<h1>CSS Scroll Snap Carousel</h1>
+<p class="muted">Change the axis, snap strictness, alignment and gap. Scroll the preview to feel how CSS Scroll Snap controls where scrolling settles.</p>
+<section class="panel">
+<div class="controls">
+<div class="field"><label for="axis">Scroll axis</label><select id="axis"><option value="x">Horizontal (x)</option><option value="y">Vertical (y)</option></select></div>
+<div class="field"><label for="type">Snap strictness</label><select id="type"><option value="mandatory">Mandatory</option><option value="proximity">Proximity</option></select></div>
+<div class="field"><label for="align">Snap alignment</label><select id="align"><option value="start">Start</option><option value="center">Center</option><option value="end">End</option></select></div>
+<div class="field"><label for="gap">Gap: <output id="gapValue">14 px</output></label><input id="gap" type="range" min="0" max="40" value="14"></div>
+</div>
+</section>
+<section class="panel">
+<h2>Live preview</h2>
+<div class="track-wrap"><div id="track" class="track" tabindex="0" aria-label="Scrollable snap preview">
+<article class="slide"><strong>01 · Explore</strong><span>Scroll to the next card</span></article>
+<article class="slide"><strong>02 · Create</strong><span>Notice the snap alignment</span></article>
+<article class="slide"><strong>03 · Learn</strong><span>Try changing the axis</span></article>
+<article class="slide"><strong>04 · Share</strong><span>Experiment with proximity</span></article>
+</div></div>
+<div class="actions"><button id="first" type="button">Go to first card</button><button id="next" type="button">Next card</button></div>
+</section>
+<section class="panel">
+<h2>CSS used by the preview</h2>
+<pre id="code" class="code" aria-live="polite"></pre>
+</section>
+</main>
+<script>
+const axis=document.getElementById('axis'),type=document.getElementById('type'),align=document.getElementById('align'),gap=document.getElementById('gap'),track=document.getElementById('track'),code=document.getElementById('code');
+function update(){const a=axis.value;track.classList.toggle('vertical',a==='y');track.style.scrollSnapType=a+' '+type.value;track.style.setProperty('--gap',gap.value+'px');track.style.setProperty('--snap-align',align.value);track.querySelectorAll('.slide').forEach(slide=>slide.style.scrollSnapAlign=align.value);document.getElementById('gapValue').textContent=gap.value+' px';code.textContent='.carousel {\\n  display: flex;\\n  gap: '+gap.value+'px;\\n  overflow: auto;\\n  scroll-snap-type: '+a+' '+type.value+';\\n}\\n\\n.carousel-item {\\n  scroll-snap-align: '+align.value+';\\n}';}
+[axis,type,align,gap].forEach(control=>control.addEventListener('input',update));
+document.getElementById('first').addEventListener('click',()=>track.scrollTo({left:0,top:0,behavior:'smooth'}));
+document.getElementById('next').addEventListener('click',()=>{const slides=[...track.children];const current=axis.value==='x'?track.scrollLeft:track.scrollTop;const next=slides.find(slide=>(axis.value==='x'?slide.offsetLeft-track.offsetLeft:slide.offsetTop-track.offsetTop)>current+8);if(next)next.scrollIntoView({behavior:'smooth',block:align.value,inline:align.value})});
+update();
+</script>
+</body>
+</html>

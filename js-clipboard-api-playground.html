@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Clipboard API Playground</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font:16px/1.55 system-ui,sans-serif}main{width:min(100% - 32px,850px);margin:36px auto}h1{font-size:clamp(1.9rem,4vw,2.5rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:16px;padding:20px;margin:18px 0}.field{display:grid;gap:7px}.field label{font-weight:700}textarea{width:100%;min-height:150px;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;resize:vertical}textarea:focus-visible,button:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}button{border:0;border-radius:9px;padding:10px 15px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}button.secondary{background:#e2e8f0;color:#172033}.status{min-height:1.6em;margin:12px 0 0;padding:10px 12px;border-radius:9px;background:#f1f5f9;color:#334155}.status.error{background:#fee2e2;color:#991b1b}.status.success{background:#dcfce7;color:#166534}.note{font-size:.92rem;color:#64748b}.fallback{margin-top:12px;padding:12px;border:1px dashed #cbd5e1;border-radius:10px}@media(max-width:560px){main{margin:22px auto}.panel{padding:15px}}
+</style>
+</head>
+<body>
+<main>
+<h1>Clipboard API Playground</h1>
+<p class="muted">Copy text to the system clipboard or paste clipboard text into the editor. Clipboard permissions are controlled by your browser.</p>
+<section class="panel">
+<div class="field"><label for="editor">Text editor</label><textarea id="editor">Hello from the Clipboard API playground!</textarea></div>
+<div class="actions"><button id="copy" type="button">Copy text</button><button id="paste" type="button">Paste from clipboard</button><button id="select" class="secondary" type="button">Select all text</button><button id="clear" class="secondary" type="button">Clear</button></div>
+<p id="status" class="status" role="status" aria-live="polite">Choose an action. Clipboard access works on secure pages (HTTPS or localhost) in supported browsers.</p>
+<div class="fallback"><strong>Manual fallback:</strong><p class="note">If clipboard access is blocked, select the text above and use your device's Copy or Paste command. This avoids silently pretending that a blocked clipboard action succeeded.</p></div>
+</section>
+<section class="panel">
+<h2>Try these experiments</h2>
+<ul><li>Edit the text, then copy it and paste it into another app.</li><li>Copy a sentence outside this page, then use Paste from clipboard.</li><li>Open the browser's site permissions to see how clipboard access is handled.</li></ul>
+<p class="note">Reading clipboard contents may require a permission prompt or a recent user gesture. The page never reads the clipboard automatically.</p>
+</section>
+</main>
+<script>
+const editor=document.querySelector('#editor'),status=document.querySelector('#status');
+function announce(message,type){status.textContent=message;status.className='status'+(type?' '+type:'')}
+document.querySelector('#copy').addEventListener('click',async()=>{
+ if(!editor.value){announce('There is no text to copy.','error');return}
+ try{
+  if(!navigator.clipboard||!navigator.clipboard.writeText)throw new Error('Clipboard writing is unavailable in this browser or page context.');
+  await navigator.clipboard.writeText(editor.value);announce('Copied '+editor.value.length+' characters to the clipboard.','success');
+ }catch(error){editor.focus();editor.select();announce((error.message||'Clipboard access was blocked')+' Select the text and copy it manually.','error')}
+});
+document.querySelector('#paste').addEventListener('click',async()=>{
+ try{
+  if(!navigator.clipboard||!navigator.clipboard.readText)throw new Error('Clipboard reading is unavailable in this browser or page context.');
+  const value=await navigator.clipboard.readText();editor.value=value;announce('Pasted '+value.length+' characters from the clipboard.','success');
+ }catch(error){announce((error.message||'Clipboard access was blocked')+' You can paste manually into the editor.','error')}
+});
+document.querySelector('#select').addEventListener('click',()=>{editor.focus();editor.select();announce('Text selected. Use your device copy command to copy it.','')});
+document.querySelector('#clear').addEventListener('click',()=>{editor.value='';announce('Editor cleared.','')});
+</script>
+</body>
+</html>

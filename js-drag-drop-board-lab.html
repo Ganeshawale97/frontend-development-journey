@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Drag and Drop Task Board Lab</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f3f6fb;color:#172033;font:16px/1.5 system-ui,sans-serif}main{width:min(100% - 28px,1120px);margin:32px auto}h1{font-size:clamp(1.8rem,4vw,2.5rem);margin:0 0 8px}.muted{color:#64748b}.panel{background:#fff;border:1px solid #dbe2ee;border-radius:15px;padding:18px;margin:16px 0}.add-form{display:flex;gap:10px;flex-wrap:wrap}.add-form input{flex:1 1 220px;min-width:0;padding:11px;border:1px solid #cbd5e1;border-radius:9px;font:inherit}.add-form button,button{border:0;border-radius:9px;padding:10px 14px;background:#4f46e5;color:#fff;font:inherit;font-weight:650;cursor:pointer}.add-form button:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #a5b4fc;outline-offset:2px}.board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}.column{background:#e9eef7;border:1px solid #d6deeb;border-radius:14px;padding:12px;min-height:280px}.column h2{font-size:1.05rem;margin:2px 2px 12px;display:flex;justify-content:space-between}.dropzone{display:grid;gap:9px;min-height:210px}.dropzone.over{outline:3px dashed #6366f1;outline-offset:3px;border-radius:9px}.task{background:#fff;border:1px solid #d6deeb;border-radius:10px;padding:12px;box-shadow:0 3px 10px #1720330a}.task.dragging{opacity:.45}.task p{margin:0 0 10px;overflow-wrap:anywhere}.task-actions{display:flex;gap:6px;flex-wrap:wrap}.task-actions button{padding:6px 9px;font-size:.84rem}.task-actions .remove{background:#fee2e2;color:#991b1b}.empty{color:#64748b;font-size:.9rem;text-align:center;padding:24px 8px}.status{min-height:1.4em;color:#4338ca;font-weight:650}.help{font-size:.9rem;color:#64748b}@media(max-width:760px){.board{grid-template-columns:1fr}.column{min-height:180px}.dropzone{min-height:110px}}@media(prefers-reduced-motion:no-preference){.task{transition:transform .15s,opacity .15s}.task:hover{transform:translateY(-2px)}}
+</style>
+</head>
+<body>
+<main>
+<h1>Drag and Drop Task Board</h1>
+<p class="muted">Move tasks between columns with native HTML drag-and-drop. Every card also has keyboard-friendly move buttons.</p>
+<section class="panel">
+<form id="addForm" class="add-form"><label for="newTask" class="sr-only">New task title</label><input id="newTask" maxlength="100" placeholder="Add a task to To do…" required><button type="submit">Add task</button></form>
+<p id="status" class="status" role="status" aria-live="polite">Drag a task to another column, or use its move buttons.</p>
+</section>
+<section class="board" aria-label="Task board">
+<section class="column" data-column="todo"><h2>To do <span id="count-todo">0</span></h2><div class="dropzone" id="todo" data-column="todo" aria-label="To do tasks"></div></section>
+<section class="column" data-column="doing"><h2>In progress <span id="count-doing">0</span></h2><div class="dropzone" id="doing" data-column="doing" aria-label="In progress tasks"></div></section>
+<section class="column" data-column="done"><h2>Done <span id="count-done">0</span></h2><div class="dropzone" id="done" data-column="done" aria-label="Completed tasks"></div></section>
+</section>
+<p class="help">Tip: on touch devices, use the Move buttons because native drag-and-drop support varies by browser.</p>
+</main>
+<style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+<script>
+const columns=['todo','doing','done'];let nextId=4,draggedId=null;
+const initial=[{id:1,title:'Sketch the page layout',column:'todo'},{id:2,title:'Build the responsive header',column:'doing'},{id:3,title:'Test the mobile layout',column:'done'}];
+function makeTask(item){
+ const card=document.createElement('article');card.className='task';card.draggable=true;card.dataset.id=String(item.id);
+ const title=document.createElement('p');title.textContent=item.title;
+ const actions=document.createElement('div');actions.className='task-actions';
+ const current=columns.indexOf(item.column);
+ if(current>0){const back=document.createElement('button');back.type='button';back.textContent='Move left';back.addEventListener('click',()=>move(item.id,columns[current-1]));actions.append(back)}
+ if(current<2){const forward=document.createElement('button');forward.type='button';forward.textContent='Move right';forward.addEventListener('click',()=>move(item.id,columns[current+1]));actions.append(forward)}
+ const remove=document.createElement('button');remove.type='button';remove.className='remove';remove.textContent='Delete';remove.addEventListener('click',()=>{card.remove();refreshCounts();announce('Task deleted.')});
+ card.append(title,actions,remove);
+ card.addEventListener('dragstart',event=>{draggedId=item.id;event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',String(item.id));card.classList.add('dragging')});
+ card.addEventListener('dragend',()=>{draggedId=null;card.classList.remove('dragging');document.querySelectorAll('.dropzone').forEach(zone=>zone.classList.remove('over'))});
+ return card;
+}
+function refreshCounts(){columns.forEach(name=>{const zone=document.getElementById(name);const count=zone.querySelectorAll('.task').length;document.getElementById('count-'+name).textContent=count;const empty=zone.querySelector('.empty');if(count===0&&!empty){const p=document.createElement('p');p.className='empty';p.textContent='Drop a task here';zone.append(p)}else if(count>0&&empty)empty.remove()})}
+function move(id,column){const card=document.querySelector('.task[data-id="'+id+'"]');if(!card)return;document.getElementById(column).append(card);refreshCounts();announce('Task moved to '+document.querySelector('[data-column="'+column+'"] h2').childNodes[0].textContent.trim()+'.')}
+function announce(message){document.getElementById('status').textContent=message}
+document.querySelectorAll('.dropzone').forEach(zone=>{
+ zone.addEventListener('dragover',event=>{event.preventDefault();event.dataTransfer.dropEffect='move';zone.classList.add('over')});
+ zone.addEventListener('dragleave',event=>{if(!zone.contains(event.relatedTarget))zone.classList.remove('over')});
+ zone.addEventListener('drop',event=>{event.preventDefault();zone.classList.remove('over');const id=Number(event.dataTransfer.getData('text/plain'))||draggedId;if(id)move(id,zone.dataset.column)});
+});
+document.getElementById('addForm').addEventListener('submit',event=>{event.preventDefault();const input=document.getElementById('newTask');const title=input.value.trim();if(!title)return;document.getElementById('todo').append(makeTask({id:nextId++,title,column:'todo'}));input.value='';refreshCounts();announce('New task added to To do.');input.focus()});
+initial.forEach(item=>document.getElementById(item.column).append(makeTask(item)));refreshCounts();
+</script>
+</body>
+</html>

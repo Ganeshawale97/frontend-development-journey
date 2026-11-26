@@ -27,21 +27,21 @@
 <script>
 const columns=['todo','doing','done'];let nextId=4,draggedId=null;
 const initial=[{id:1,title:'Sketch the page layout',column:'todo'},{id:2,title:'Build the responsive header',column:'doing'},{id:3,title:'Test the mobile layout',column:'done'}];
+function renderActions(card,column){
+ const actions=card.querySelector('.task-actions');actions.replaceChildren();const id=Number(card.dataset.id);const current=columns.indexOf(column);
+ if(current>0){const back=document.createElement('button');back.type='button';back.textContent='Move left';back.addEventListener('click',()=>move(id,columns[current-1]));actions.append(back)}
+ if(current<2){const forward=document.createElement('button');forward.type='button';forward.textContent='Move right';forward.addEventListener('click',()=>move(id,columns[current+1]));actions.append(forward)}
+ const remove=document.createElement('button');remove.type='button';remove.className='remove';remove.textContent='Delete';remove.addEventListener('click',()=>{card.remove();refreshCounts();announce('Task deleted.')});actions.append(remove);
+}
 function makeTask(item){
  const card=document.createElement('article');card.className='task';card.draggable=true;card.dataset.id=String(item.id);
- const title=document.createElement('p');title.textContent=item.title;
- const actions=document.createElement('div');actions.className='task-actions';
- const current=columns.indexOf(item.column);
- if(current>0){const back=document.createElement('button');back.type='button';back.textContent='Move left';back.addEventListener('click',()=>move(item.id,columns[current-1]));actions.append(back)}
- if(current<2){const forward=document.createElement('button');forward.type='button';forward.textContent='Move right';forward.addEventListener('click',()=>move(item.id,columns[current+1]));actions.append(forward)}
- const remove=document.createElement('button');remove.type='button';remove.className='remove';remove.textContent='Delete';remove.addEventListener('click',()=>{card.remove();refreshCounts();announce('Task deleted.')});
- card.append(title,actions,remove);
+ const title=document.createElement('p');title.textContent=item.title;const actions=document.createElement('div');actions.className='task-actions';card.append(title,actions);renderActions(card,item.column);
  card.addEventListener('dragstart',event=>{draggedId=item.id;event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',String(item.id));card.classList.add('dragging')});
  card.addEventListener('dragend',()=>{draggedId=null;card.classList.remove('dragging');document.querySelectorAll('.dropzone').forEach(zone=>zone.classList.remove('over'))});
  return card;
 }
 function refreshCounts(){columns.forEach(name=>{const zone=document.getElementById(name);const count=zone.querySelectorAll('.task').length;document.getElementById('count-'+name).textContent=count;const empty=zone.querySelector('.empty');if(count===0&&!empty){const p=document.createElement('p');p.className='empty';p.textContent='Drop a task here';zone.append(p)}else if(count>0&&empty)empty.remove()})}
-function move(id,column){const card=document.querySelector('.task[data-id="'+id+'"]');if(!card)return;document.getElementById(column).append(card);refreshCounts();announce('Task moved to '+document.querySelector('[data-column="'+column+'"] h2').childNodes[0].textContent.trim()+'.')}
+function move(id,column){const card=document.querySelector('.task[data-id="'+id+'"]');if(!card)return;document.getElementById(column).append(card);renderActions(card,column);refreshCounts();announce('Task moved to '+document.querySelector('[data-column="'+column+'"] h2').childNodes[0].textContent.trim()+'.')}
 function announce(message){document.getElementById('status').textContent=message}
 document.querySelectorAll('.dropzone').forEach(zone=>{
  zone.addEventListener('dragover',event=>{event.preventDefault();event.dataTransfer.dropEffect='move';zone.classList.add('over')});
